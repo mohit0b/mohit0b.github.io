@@ -77,6 +77,18 @@ body {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.cta-button.outline {
+  background: transparent;
+  color: var(--accent);
+  border-color: rgba(72, 229, 194, 0.4);
+  box-shadow: 0 12px 28px rgba(12, 46, 64, 0.36);
+}
+
+.cta-button.outline:hover,
+.cta-button.outline:focus {
+  background: rgba(72, 229, 194, 0.12);
+}
+
 .cta-button:hover,
 .cta-button:focus {
   transform: translateY(-3px);

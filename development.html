@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LinkNode Development Plan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Fira+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: radial-gradient(circle at 15% 25%, #10355f, #040712 62%);
+        --card-bg: rgba(10, 22, 34, 0.92);
+        --card-alt: rgba(13, 30, 44, 0.94);
+        --accent: #48e5c2;
+        --accent-soft: rgba(72, 229, 194, 0.16);
+        --muted: rgba(241, 245, 249, 0.7);
+        --text: #f1f5f9;
+        --shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+        --border: rgba(255, 255, 255, 0.08);
+        --font-heading: "Space Grotesk", sans-serif;
+        --font-body: "Fira Sans", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+        display: flex;
+        justify-content: center;
+      }
+
+      .page {
+        width: min(1180px, 100%);
+        padding: clamp(32px, 4vw, 72px);
+      }
+
+      header.hero {
+        text-align: center;
+        margin-bottom: clamp(44px, 6vw, 72px);
+      }
+
+      header.hero .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        border: 1px solid rgba(72, 229, 194, 0.25);
+        color: var(--accent);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+      }
+
+      header.hero h1 {
+        font-family: var(--font-heading);
+        font-size: clamp(2.2rem, 4vw, 3.1rem);
+        margin: 18px 0 16px;
+      }
+
+      header.hero p {
+        color: var(--muted);
+        max-width: 720px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      .nav-actions {
+        margin-top: 26px;
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      a.button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 26px;
+        border-radius: 999px;
+        font-family: var(--font-heading);
+        font-size: 0.94rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+      }
+
+      a.button.primary {
+        background: linear-gradient(135deg, rgba(72, 229, 194, 0.92), rgba(72, 229, 194, 0.6));
+        color: #041420;
+        border: 1px solid rgba(72, 229, 194, 0.32);
+        box-shadow: 0 16px 32px rgba(12, 82, 78, 0.35);
+      }
+
+      a.button.secondary {
+        background: transparent;
+        color: var(--accent);
+        border: 1px solid rgba(72, 229, 194, 0.35);
+        box-shadow: 0 12px 28px rgba(10, 42, 60, 0.4);
+      }
+
+      a.button:hover,
+      a.button:focus {
+        transform: translateY(-3px);
+      }
+
+      a.button:focus-visible {
+        outline: 2px solid rgba(72, 229, 194, 0.8);
+        outline-offset: 3px;
+      }
+
+      .timeline {
+        position: relative;
+        display: grid;
+        gap: clamp(26px, 4vw, 38px);
+      }
+
+      .phase {
+        background: var(--card-bg);
+        border-radius: 24px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        padding: clamp(26px, 4vw, 36px);
+        display: grid;
+        gap: 24px;
+      }
+
+      .phase-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 16px;
+      }
+
+      .phase-tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 18px;
+        background: rgba(72, 229, 194, 0.14);
+        color: var(--accent);
+        font-family: var(--font-heading);
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .phase-title {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .phase-title h2 {
+        margin: 0;
+        font-family: var(--font-heading);
+        font-size: clamp(1.4rem, 2.6vw, 1.85rem);
+      }
+
+      .phase-title span {
+        color: rgba(241, 245, 249, 0.62);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-size: 0.82rem;
+      }
+
+      .phase-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: clamp(20px, 3vw, 32px);
+      }
+
+      .column {
+        background: var(--card-alt);
+        border-radius: 18px;
+        border: 1px solid rgba(72, 229, 194, 0.12);
+        padding: 20px 22px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .column h3 {
+        margin: 0;
+        font-family: var(--font-heading);
+        font-size: 1.05rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: rgba(241, 245, 249, 0.75);
+      }
+
+      .column ul {
+        margin: 0;
+        padding-left: 18px;
+        display: grid;
+        gap: 10px;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .column ul li::marker {
+        color: var(--accent);
+      }
+
+      .footer-note {
+        margin-top: clamp(44px, 6vw, 64px);
+        text-align: center;
+        color: var(--muted);
+      }
+
+      .footer-note strong {
+        color: var(--accent);
+      }
+
+      @media (max-width: 768px) {
+        .phase {
+          padding: 24px;
+        }
+
+        .column {
+          padding: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <span class="badge">LinkNode Roadmap</span>
+        <h1>Total Development Plan with Upgradation</h1>
+        <p>
+          A phased delivery roadmap ensuring LinkNode evolves from multi-tier visibility
+          and predictive intelligence into a resilient, compliant digital twin platform.
+        </p>
+        <div class="nav-actions">
+          <a class="button primary" href="index.html">Back to Overview</a>
+          <a class="button secondary" href="flowchart.html">View Layered Flowchart</a>
+        </div>
+      </header>
+
+      <main class="timeline">
+        <section class="phase" id="phase-0">
+          <div class="phase-header">
+            <div class="phase-tag">0</div>
+            <div class="phase-title">
+              <h2>Planning, Scope &amp; Feasibility</h2>
+              <span>Week 1</span>
+            </div>
+          </div>
+          <div class="phase-content">
+            <div class="column">
+              <h3>Core Build</h3>
+              <ul>
+                <li>Finalize problem statement and key objectives.</li>
+                <li>Define user roles: Anchor (original equipment manufacturer) and Suppliers (Tier-1 to Tier-N).</li>
+                <li>Lock initial scope around multi-tier visibility, predictive risk alerts, and plan-B sourcing.</li>
+                <li>Decide on simulated versus real data sources for onboarding.</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h3>Upgrade Path</h3>
+              <ul>
+                <li>Introduce logistics partners and regulator/auditor personas.</li>
+                <li>Localize industry variants for pharma, EV, FMCG, and electronics supply chains.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="phase" id="phase-1">
+          <div class="phase-header">
+            <div class="phase-tag">1</div>
+            <div class="phase-title">
+              <h2>System Architecture &amp; Tech Stack</h2>
+              <span>Week 2</span>
+            </div>
+          </div>
+          <div class="phase-content">
+            <div class="column">
+              <h3>Core Build</h3>
+              <ul>
+                <li>Design a four-layer modular architecture.</li>
+                <li>Presentation: React.js dashboards.</li>
+                <li>Logic: Node.js with Express services.</li>
+                <li>Intelligence: Python risk engine.</li>
+                <li>Data: MongoDB with graph modeling.</li>
+                <li>Integrate Currents API and OpenWeatherMap.</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h3>Upgrade Path</h3>
+              <ul>
+                <li>Shift to a microservices architecture.</li>
+                <li>Adopt event-driven messaging with Kafka.</li>
+                <li>Enable cloud-native scaling on Kubernetes.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="phase" id="phase-2">
+          <div class="phase-header">
+            <div class="phase-tag">2</div>
+            <div class="phase-title">
+              <h2>Database &amp; Digital Twin Modeling</h2>
+              <span>Week 3</span>
+            </div>
+          </div>
+          <div class="phase-content">
+            <div class="column">
+              <h3>Core Build</h3>
+              <ul>
+                <li>Establish MongoDB collections: suppliers, risk_events, inventory, documents (GridFS).</li>
+                <li>Implement parent-child relationships for network traversal.</li>
+                <li>Enable $graphLookup queries for Tier-N exploration.</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h3>Upgrade Path</h3>
+              <ul>
+                <li>Introduce time-series database for logistics telemetry.</li>
+                <li>Evaluate Neo4j for very large supply graphs.</li>
+                <li>Anchor contract hashes on blockchain for integrity.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="phase" id="phase-3">
+          <div class="phase-header">
+            <div class="phase-tag">3</div>
+            <div class="phase-title">
+              <h2>Supplier Onboarding &amp; Network Expansion</h2>
+              <span>Week 4</span>
+            </div>
+          </div>
+          <div class="phase-content">
+            <div class="column">
+              <h3>Core Build</h3>
+              <ul>
+                <li>Launch anchor onboarding workflow.</li>
+                <li>Enable cascading invitations from Tier-1 through Tier-N.</li>
+                <li>Create open discovery pool for independent suppliers.</li>
+                <li>Persist parent-child relationships in MongoDB.</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h3>Upgrade Path</h3>
+              <ul>
+                <li>AI-assisted supplier discovery recommendations.</li>
+                <li>Automated verification via government or trade APIs.</li>
+                <li>Consortium-based shared onboarding for allied firms.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="phase" id="phase-4">
+          <div class="phase-header">
+            <div class="phase-tag">4</div>
+            <div class="phase-title">
+              <h2>Intelligence &amp; Risk Monitoring</h2>
+              <span>Week 5</span>
+            </div>
+          </div>
+          <div class="phase-content">
+            <div class="column">
+              <h3>Core Build</h3>
+              <ul>
+                <li>Integrate Currents API for disruption news.</li>
+                <li>Implement keyword filtering and rule-based NLP tagging.</li>
+                <li>Score severity from 1 to 5.</li>
+                <li>Overlay weather risk for cyclones, floods, and heatwaves.</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h3>Upgrade Path</h3>
+              <ul>
+                <li>Adopt transformer-based NLP models.</li>
+                <li>Support multilingual sentiment classification.</li>
+                <li>Ingest social media signals (X, Reddit).</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="phase" id="phase-5">
+          <div class="phase-header">
+            <div class="phase-tag">5</div>
+            <div class="phase-title">
+              <h2>Geospatial Matching &amp; Risk Localization</h2>
+              <span>Week 6</span>
+            </div>
+          </div>
+          <div class="phase-content">
+            <div class="column">
+              <h3>Core Build</h3>
+              <ul>
+                <li>Extract event coordinates from Currents API.</li>
+                <li>Match suppliers by GPS location within defined radius (e.g., 200 km).</li>
+                <li>Mark impacted suppliers and hand off to impact analysis.</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h3>Upgrade Path</h3>
+              <ul>
+                <li>Dynamic risk radius based on severity and velocity.</li>
+                <li>Integrate satellite imagery feeds.</li>
+                <li>Overlay real-time traffic and port congestion data.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="phase" id="phase-6">
+          <div class="phase-header">
+            <div class="phase-tag">6</div>
+            <div class="phase-title">
+              <h2>Risk Propagation &amp; Impact Analysis</h2>
+              <span>Week 7</span>
+            </div>
+          </div>
+          <div class="phase-content">
+            <div class="column">
+              <h3>Core Build</h3>
+              <ul>
+                <li>Run recursive graph traversals for dependency impact.</li>
+                <li>Calculate buffer days and project delays.</li>
+                <li>Estimate production impact by product line or plant.</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h3>Upgrade Path</h3>
+              <ul>
+                <li>Introduce Monte Carlo simulations for probabilistic forecasting.</li>
+                <li>Provide what-if scenario planning within the digital twin.</li>
+                <li>Develop financial loss modeling engine.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="phase" id="phase-7">
+          <div class="phase-header">
+            <div class="phase-tag">7</div>
+            <div class="phase-title">
+              <h2>Mitigation &amp; Plan-B Recommendation</h2>
+              <span>Week 8</span>
+            </div>
+          </div>
+          <div class="phase-content">
+            <div class="column">
+              <h3>Core Build</h3>
+              <ul>
+                <li>Generate alerts with contract context.</li>
+                <li>Filter backup suppliers by material, certification, and lead time.</li>
+                <li>Support manual approval workflow for pivots.</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h3>Upgrade Path</h3>
+              <ul>
+                <li>AI-based ranking for suppliers.</li>
+                <li>Auto-activation of smart contracts.</li>
+                <li>Automated negotiation assistants for procurement.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="phase" id="phase-8">
+          <div class="phase-header">
+            <div class="phase-tag">8</div>
+            <div class="phase-title">
+              <h2>Frontend Visualization &amp; UX</h2>
+              <span>Week 9</span>
+            </div>
+          </div>
+          <div class="phase-content">
+            <div class="column">
+              <h3>Core Build</h3>
+              <ul>
+                <li>Render supplier network graph with react-force-graph.</li>
+                <li>Display risk heatmap and action center dashboard.</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h3>Upgrade Path</h3>
+              <ul>
+                <li>Introduce 3D digital twin visualization.</li>
+                <li>Develop mobile experience with React Native.</li>
+                <li>Enable voice-driven command interface for executives.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="phase" id="phase-9">
+          <div class="phase-header">
+            <div class="phase-tag">9</div>
+            <div class="phase-title">
+              <h2>Digital Contracts &amp; Compliance</h2>
+              <span>Week 10</span>
+            </div>
+          </div>
+          <div class="phase-content">
+            <div class="column">
+              <h3>Core Build</h3>
+              <ul>
+                <li>Upload contracts (PDF) to secure vault.</li>
+                <li>Monitor expirations and send alerts.</li>
+                <li>Detect SLA breaches from logistics data.</li>
+                <li>Hash documents for integrity checks.</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h3>Upgrade Path</h3>
+              <ul>
+                <li>Adopt blockchain-backed smart contracts.</li>
+                <li>Automated ESG scoring pipelines.</li>
+                <li>Dedicated regulatory audit dashboards.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="phase" id="phase-10">
+          <div class="phase-header">
+            <div class="phase-tag">10</div>
+            <div class="phase-title">
+              <h2>Testing, Deployment &amp; Demo</h2>
+              <span>Week 11</span>
+            </div>
+          </div>
+          <div class="phase-content">
+            <div class="column">
+              <h3>Core Build</h3>
+              <ul>
+                <li>Create risk simulation scenarios for validation.</li>
+                <li>Execute functional and API testing.</li>
+                <li>Deploy to cloud environment and stage demo walkthrough.</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h3>Upgrade Path</h3>
+              <ul>
+                <li>Perform large-scale load testing.</li>
+                <li>Introduce chaos engineering drills.</li>
+                <li>Set up enterprise-grade SLA monitoring.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <p class="footer-note">
+        <strong>LinkNode</strong> evolves from foundational visibility into an adaptive, compliant, and intelligent supply
+        chain guardian.
+      </p>
+    </div>
+  </body>
+</html>
