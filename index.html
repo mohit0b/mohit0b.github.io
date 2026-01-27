@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LinkNode Supply Chain Flow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Fira+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <div class="hero-text">
+          <span class="badge">Digital Twin for Predictive SCM</span>
+          <h1>LinkNode End-to-End Visibility Flow</h1>
+          <p>
+            Trace supplier dependencies from anchor original equipment manufacturers to raw material origins,
+            continuously evaluate global risk signals, and pivot sourcing before
+            disruptions stall production.
+          </p>
+          <div class="hero-actions">
+            <a class="cta-button" href="flowchart.html">View Layered Flowchart</a>
+          </div>
+        </div>
+        <div class="hero-graphic" aria-hidden="true">
+          <div class="hero-orbit"></div>
+          <div class="hero-node anchor"></div>
+          <div class="hero-node tier"></div>
+          <div class="hero-node risk"></div>
+        </div>
+      </header>
+
+      <main>
+        <section class="flowchart" aria-labelledby="flowchart-title">
+          <header class="section-heading">
+            <h2 id="flowchart-title">Phase-by-Phase System Flow</h2>
+            <p>
+              Follow the cascading invitations, real-time monitoring, and risk
+              mitigation loop powering LinkNode.
+            </p>
+          </header>
+
+          <div class="flowchart-grid">
+            <div class="phase" data-phase="onboarding">
+              <div class="phase-header">
+                <span class="phase-number">01</span>
+                <h3>Onboarding &amp; Network Building</h3>
+              </div>
+              <div class="node-list">
+                <button
+                  class="flow-node"
+                  data-title="Anchor Original Equipment Manufacturer Setup"
+                  data-description="Tier-0 original equipment manufacturer (e.g., Aura Motors) registers, seeds the primary dashboard, and anchors the network."
+                >
+                  <span>User Registration<br /><small>Anchor Path</small></span>
+                </button>
+                <button
+                  class="flow-node"
+                  data-title="Open Pool Registration"
+                  data-description="Independent suppliers self-register in the discovery pool, awaiting matching against material and capability tags."
+                >
+                  <span>Open Registration<br /><small>Global Discovery Pool</small></span>
+                </button>
+                <button
+                  class="flow-node"
+                  data-title="Cascading Invitations"
+                  data-description="Each supplier triggers invitations down the chain: Tier-1 brings Tier-2, and so on, growing the digital twin hierarchy."
+                >
+                  <span>Cascading Invitations<br /><small>Tier-1 ➝ Tier-N</small></span>
+                </button>
+                <button
+                  class="flow-node"
+                  data-title="Graph Persistence"
+                  data-description="MongoDB stores parent-child edges for every supplier node, enabling recursive traversal via $graphLookup queries."
+                >
+                  <span>Parent-Child Storage<br /><small>MongoDB Graph Model</small></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="phase" data-phase="monitoring">
+              <div class="phase-header">
+                <span class="phase-number">02</span>
+                <h3>Continuous Data Monitoring</h3>
+              </div>
+              <div class="node-list">
+                <button
+                  class="flow-node"
+                  data-title="Inventory & Capacity Updates"
+                  data-description="Suppliers feed live inventory levels and production capacity, exposing chokepoints across the tree."
+                >
+                  <span>Supply Data<br /><small>Inventory Pulse</small></span>
+                </button>
+                <button
+                  class="flow-node"
+                  data-title="Logistics Telemetry"
+                  data-description="Fleet APIs stream truck positions and shipment milestones to forecast ETA variances."
+                >
+                  <span>Logistics Data<br /><small>Transit Tracking</small></span>
+                </button>
+                <button
+                  class="flow-node"
+                  data-title="Risk Intelligence Crawlers"
+                  data-description="Python engine scrapes NewsAPI and OpenWeatherMap feeds, filtering keywords like strike, cyclone, or shortage."
+                >
+                  <span>Risk Engine Feeds<br /><small>News &amp; Weather</small></span>
+                </button>
+                <button
+                  class="flow-node"
+                  data-title="Keyword Filtering"
+                  data-description="NLP filters flag relevant crises, enriching events with geo-coordinates and severity hints."
+                >
+                  <span>Keyword Filtering<br /><small>NLP Tagging</small></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="phase" data-phase="analysis">
+              <div class="phase-header">
+                <span class="phase-number">03</span>
+                <h3>Logic &amp; Risk Analysis</h3>
+              </div>
+              <div class="node-list">
+                <button
+                  class="flow-node"
+                  data-title="Geo-Fencing Match"
+                  data-description="Risk events are lat/long-matched against supplier locations to localize disruption exposure."
+                >
+                  <span>Geographic Matching<br /><small>Risk Localization</small></span>
+                </button>
+                <button
+                  class="flow-node"
+                  data-title="Risk Severity Scoring"
+                  data-description="Events are graded High/Medium/Low depending on disruption type: source outages vs. logistics vs. advisories."
+                >
+                  <span>Severity Calculation<br /><small>Impact Bands</small></span>
+                </button>
+                <button
+                  class="flow-node"
+                  data-title="Impact Propagation"
+                  data-description="Recursive $graphLookup projections reveal upstream stockout timelines and downstream production delays."
+                >
+                  <span>Impact Propagation<br /><small>$graphLookup Chains</small></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="phase" data-phase="mitigation">
+              <div class="phase-header">
+                <span class="phase-number">04</span>
+                <h3>Output &amp; Mitigation</h3>
+              </div>
+              <div class="node-list">
+                <button
+                  class="flow-node"
+                  data-title="Alert Broadcasting"
+                  data-description="Hybrid dashboard surfaces red alerts, quantifying delay windows (e.g., 22 days) and vulnerable nodes."
+                >
+                  <span>Alert Generation<br /><small>Dashboard Signals</small></span>
+                </button>
+                <button
+                  class="flow-node"
+                  data-title="Alternative Sourcing"
+                  data-description="Recommender scans the open pool for material/geo matches, proposing vetted plan B suppliers."
+                >
+                  <span>Plan B Recommender<br /><small>Open Pool Query</small></span>
+                </button>
+                <button
+                  class="flow-node"
+                  data-title="Dynamic ETA Refresh"
+                  data-description="Logistics timelines adjust with predictive ETAs to keep distribution centres informed."
+                >
+                  <span>Live ETA Update<br /><small>Adaptive Logistics</small></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="phase" data-phase="experience">
+              <div class="phase-header">
+                <span class="phase-number">05</span>
+                <h3>Presentation Layer Experience</h3>
+              </div>
+              <div class="node-list">
+                <button
+                  class="flow-node"
+                  data-title="Supplier Network Graph"
+                  data-description="React-based force-directed visuals expose every tier connection, allowing executives to trace dependencies from the original equipment manufacturer to raw material origin."
+                >
+                  <span>Network Graph<br /><small>react-force-graph</small></span>
+                </button>
+                <button
+                  class="flow-node"
+                  data-title="Risk Heatmap"
+                  data-description="Global map renders geofenced disruptions in red zones, layering severity and ETA impact across logistics corridors."
+                >
+                  <span>Risk Heatmap<br /><small>Global Red Zones</small></span>
+                </button>
+                <button
+                  class="flow-node"
+                  data-title="Action Center"
+                  data-description="Dashboard tiles highlight triggered alerts, recommended plan B suppliers, and the financial exposure avoided by proactive swaps."
+                >
+                  <span>Action Center<br /><small>Plan B Command</small></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="detail-panel" aria-live="polite">
+            <h4 id="detail-title">Select a node to explore its role</h4>
+            <p id="detail-description">
+              Hover or tap any flow node to reveal the critical responsibilities
+              inside that moment of the LinkNode pipeline.
+            </p>
+          </aside>
+        </section>
+
+        <section class="data-flow" aria-labelledby="data-flow-title">
+          <header class="section-heading">
+            <h2 id="data-flow-title">End-to-End Data Flow Sequence</h2>
+            <p>
+              Every risk signal travels through a predictable pipeline that turns
+              raw disruption intel into decisive mitigation actions.
+            </p>
+          </header>
+          <div class="data-flow-grid">
+            <button
+              class="flow-node flow-step"
+              data-title="Ingestion"
+              data-description="Python intelligence agents detect strikes, cyclones, or shortages from NewsAPI and OpenWeatherMap feeds."
+            >
+              <span>Ingestion<br /><small>Risk Engine Flags</small></span>
+            </button>
+            <button
+              class="flow-node flow-step"
+              data-title="Mapping"
+              data-description="Node.js aligns each disruption with supplier latitude/longitude stored in MongoDB, pinpointing affected nodes."
+            >
+              <span>Mapping<br /><small>Geo Matching</small></span>
+            </button>
+            <button
+              class="flow-node flow-step"
+              data-title="Propagation"
+              data-description="$graphLookup follows the supply hierarchy to forecast which upstream assemblies will slip and by how long."
+            >
+              <span>Propagation<br /><small>Recursive Impact</small></span>
+            </button>
+            <button
+              class="flow-node flow-step"
+              data-title="Notification"
+              data-description="React UI surfaces alerts, refreshes ETAs, and activates alternative sourcing cards to keep production on course."
+            >
+              <span>Notification<br /><small>Alert &amp; Action</small></span>
+            </button>
+          </div>
+        </section>
+
+        <section class="layers" aria-labelledby="layers-title">
+          <header class="section-heading">
+            <h2 id="layers-title">System Layers</h2>
+            <p>Each layer fuses to maintain continuous, predictive supply continuity.</p>
+          </header>
+          <div class="layer-grid">
+            <article class="layer-card">
+              <h3>Presentation Layer</h3>
+              <p>
+                React orchestrates the Supplier Network Graph, Risk Heatmap, and
+                Action Center, transforming raw telemetry into executive-readable
+                visuals.
+              </p>
+              <ul>
+                <li>react-force-graph for tier visibility</li>
+                <li>Map overlays highlighting red zone disruptions</li>
+                <li>Plan B supplier cards with readiness metrics</li>
+              </ul>
+            </article>
+            <article class="layer-card">
+              <h3>Logic Layer</h3>
+              <p>
+                Node.js orchestrates onboarding, handles $graphLookup traversals,
+                and unifies supplier, logistics, and risk APIs.
+              </p>
+              <ul>
+                <li>Cascading invitations capturing hidden tiers</li>
+                <li>Recursive query engine for disruption propagation</li>
+                <li>API gateway for UI, MongoDB, and Python engine</li>
+              </ul>
+            </article>
+            <article class="layer-card">
+              <h3>Intelligence Layer</h3>
+              <p>
+                Python risk engine scrapes, scores, and geolocates global events
+                with NLP-driven sentiment tagging.
+              </p>
+              <ul>
+                <li>NewsAPI + OpenWeatherMap clients</li>
+                <li>Keyword and sentiment filters for urgency ranking</li>
+                <li>Automatic risk_status updates in MongoDB</li>
+              </ul>
+            </article>
+            <article class="layer-card">
+              <h3>Data Layer</h3>
+              <p>
+                MongoDB captures hierarchical supplier relationships, live status
+                updates, and risk event logs at scale.
+              </p>
+              <ul>
+                <li>Supplier collection with parent_id references</li>
+                <li>Risk events keyed by geolocation and severity</li>
+                <li>Inventory ledger for just-in-time buffers</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="executive-summary" aria-labelledby="executive-title">
+          <header class="section-heading">
+            <h2 id="executive-title">Executive Summary: The LinkNode Advantage</h2>
+            <p>
+              Communicate the strategic upside of predictive visibility to CEOs and
+              supply chain directors.
+            </p>
+          </header>
+          <div class="exec-grid">
+            <article class="executive-card">
+              <h3>Resilience through Visibility</h3>
+              <p>
+                Digital twin modeling exposes Tier-2 and Tier-3 vulnerabilities
+                before they compromise production lines.
+              </p>
+            </article>
+            <article class="executive-card">
+              <h3>Proactive Risk Mitigation</h3>
+              <p>
+                AI alerts on strikes, storms, or shortages deliver early warning,
+                enabling inventory shifts before costs surge.
+              </p>
+            </article>
+            <article class="executive-card">
+              <h3>Business Continuity</h3>
+              <p>
+                Instant Plan B recommendations move teams from reaction to pivot,
+                preserving factory uptime.
+              </p>
+            </article>
+            <article class="executive-card">
+              <h3>Financial Impact</h3>
+              <p>
+                Avoid emergency logistics, balance just-in-time inventory, and
+                protect brand trust with on-time deliveries.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="tier-explainer" aria-labelledby="tier-title">
+          <header class="section-heading">
+            <h2 id="tier-title">Demystifying Supplier Tiers</h2>
+            <p>
+              Think of Tier-2 as your supplier’s supplier. Seeing beyond Tier-1 keeps
+              surprises out of your production calendar.
+            </p>
+          </header>
+          <div class="tier-grid">
+            <article class="tier-card">
+              <span class="tier-label">Anchor (Original Equipment Manufacturer)</span>
+              <h3>You, the brand on the product</h3>
+              <p>
+                Automakers such as Aura Motors assemble the finished vehicle and own
+                the customer relationship.
+              </p>
+            </article>
+            <article class="tier-card">
+              <span class="tier-label">Tier-1 Supplier</span>
+              <h3>Your direct vendor</h3>
+              <p>
+                Provides ready-to-install modules like battery packs or infotainment
+                systems. Example: Foxconn assembling iPhones for Apple.
+              </p>
+            </article>
+            <article class="tier-card danger">
+              <span class="tier-label">Tier-2 Supplier</span>
+              <h3>The danger zone</h3>
+              <p>
+                Feeds Tier-1 with critical sub-components (e.g., Samsung supplying
+                OLED screens). Disruptions here ripple to you fast.
+              </p>
+            </article>
+            <article class="tier-card">
+              <span class="tier-label">Tier-3 Supplier</span>
+              <h3>Raw inputs</h3>
+              <p>
+                Source materials such as Corning’s Gorilla Glass or lithium miners.
+                Often invisible unless actively mapped.
+              </p>
+            </article>
+          </div>
+          <div class="tier-callouts">
+            <div class="callout">
+              <h4>Blind Spot Example</h4>
+              <p>
+                A Tier-2 factory fire in China halts lithium cell shipments. Your
+                Tier-1 supplier in Pune runs dry in days, impacting your EV launch.
+              </p>
+            </div>
+            <div class="callout highlight">
+              <h4>LinkNode Utility</h4>
+              <p>
+                LinkNode unmasks Tier-2/Tier-3 relationships, continuously scoring
+                risk so you can reroute orders before a slowdown hits your line.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="services" aria-labelledby="services-title">
+          <header class="section-heading">
+            <h2 id="services-title">Service Stack: From Map to Pulse</h2>
+            <p>
+              LinkNode fuses five always-on services that illuminate blind spots,
+              anticipate shocks, and orchestrate resilient supply responses.
+            </p>
+          </header>
+          <div class="service-grid">
+            <article class="service-card">
+              <span class="service-badge">Multi-Tier Visibility Service</span>
+              <h3>The Map</h3>
+              <p>
+                A recursive onboarding protocol maps every supplier connection to
+                expose hidden dependencies.
+              </p>
+              <ul>
+                <li>Cascading invitations from Tier-1 through Tier-3.</li>
+                <li>Dependency mapping highlighting single points of failure.</li>
+                <li>Blind-spot identification for undisclosed sub-suppliers.</li>
+              </ul>
+            </article>
+
+            <article class="service-card">
+              <span class="service-badge">Predictive Risk Intelligence Service</span>
+              <h3>The Radar</h3>
+              <p>
+                A Python intelligence engine acts as an early warning system for
+                geopolitical and environmental shocks.
+              </p>
+              <ul>
+                <li>Scans thousands of news and weather sources for disruption cues.</li>
+                <li>Smart geofencing cross-references events with supplier GPS data.</li>
+                <li>Severity indexing prioritizes the riskiest developments.</li>
+              </ul>
+            </article>
+
+            <article class="service-card">
+              <span class="service-badge">Supply Chain Resilience Service</span>
+              <h3>The Plan B</h3>
+              <p>
+                Delivers mitigation playbooks the moment a supplier risk is detected.
+              </p>
+              <ul>
+                <li>Alternative supplier discovery via the open registration pool.</li>
+                <li>Matchmaking filters by material fit, capacity, and reliability.</li>
+                <li>Emergency onboarding accelerates contract and credential steps.</li>
+              </ul>
+            </article>
+
+            <article class="service-card">
+              <span class="service-badge">Impact Analytics &amp; Propagation Service</span>
+              <h3>The Brain</h3>
+              <p>
+                Quantifies downstream impact and guides production adjustments.
+              </p>
+              <ul>
+                <li>Delay propagation calculates stockout timelines tier by tier.</li>
+                <li>Financial loss prediction estimates penalties and revenue hits.</li>
+                <li>Production rescheduling suggests revised timelines and loads.</li>
+              </ul>
+            </article>
+
+            <article class="service-card">
+              <span class="service-badge">Logistics &amp; Inventory Transparency Service</span>
+              <h3>The Pulse</h3>
+              <p>
+                Keeps shipments and inventory thresholds visible in real time.
+              </p>
+              <ul>
+                <li>Hybrid tracking blends GPS data with predictive risk overlays.</li>
+                <li>Predictive estimated arrival times adjust for looming events.</li>
+                <li>Inventory threshold alerts flag approaching safety zone breaches.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="service-matrix" aria-labelledby="matrix-title">
+          <header class="section-heading">
+            <h2 id="matrix-title">Service Utility Matrix</h2>
+            <p>
+              Each service translates directly into measurable business resilience for
+              supply chain leaders.
+            </p>
+          </header>
+          <div class="matrix-table-wrapper">
+            <table class="matrix-table" aria-describedby="matrix-title">
+              <thead>
+                <tr>
+                  <th scope="col">Service</th>
+                  <th scope="col">Primary Function</th>
+                  <th scope="col">Business Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Multi-Tier Visibility</th>
+                  <td>Tier mapping with cascading invitations and dependency analytics.</td>
+                  <td>Know your suppliers’ suppliers.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Predictive Risk Intelligence</th>
+                  <td>Continuous scanning of news, weather, and geopolitical sources.</td>
+                  <td>Gain a two-week head start on emerging disasters.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Supply Chain Resilience</th>
+                  <td>Alternative sourcing recommendations with rapid onboarding.</td>
+                  <td>Maintain zero production downtime.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Impact Analytics &amp; Propagation</th>
+                  <td>Delay prediction, cost modeling, and production rescheduling.</td>
+                  <td>Inform data-driven operational decisions.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Logistics &amp; Inventory Transparency</th>
+                  <td>Predictive estimated arrival times and inventory pulse tracking.</td>
+                  <td>Deliver on time with confidence.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="core-value" aria-labelledby="core-value-title">
+          <header class="section-heading">
+            <h2 id="core-value-title">Why LinkNode Matters</h2>
+            <p>
+              Executive teams unlock proactive control by illuminating dark tiers,
+              predicting disruptions, and pivoting instantly.
+            </p>
+          </header>
+          <div class="value-grid">
+            <article class="value-card">
+              <span class="value-number">01</span>
+              <h3>Lighting up the Dark Tiers</h3>
+              <p>
+                Traditional visibility stops at direct suppliers, yet 70% of shocks
+                originate deeper in the chain. LinkNode maps the full ancestry of
+                every product, so leadership knows precisely where raw materials
+                originate.
+              </p>
+            </article>
+            <article class="value-card">
+              <span class="value-number">02</span>
+              <h3>From Reactive to Proactive</h3>
+              <p>
+                Classic enterprise systems alert you after a shipment is late. LinkNode
+                forecasts disruptions 10–15 days ahead by monitoring global news and
+                weather, giving teams time to reroute and negotiate.
+              </p>
+            </article>
+            <article class="value-card">
+              <span class="value-number">03</span>
+              <h3>The Pivot, On Demand</h3>
+              <p>
+                Crisis sourcing often takes weeks. With a pre-verified alternative pool,
+                LinkNode lets procurement shift orders instantly when a primary supplier
+                falters.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="advantages" aria-labelledby="advantages-title">
+          <header class="section-heading">
+            <h2 id="advantages-title">Competitive Edge for Supply Leaders</h2>
+            <p>
+              Proprietary graph analytics and automated intelligence give LinkNode a
+              measurable advantage over legacy solutions.
+            </p>
+          </header>
+          <div class="advantage-grid">
+            <article class="advantage-card">
+              <h3>Graph-Powered Resilience</h3>
+              <p>
+                MongoDB $graphLookup calculates the butterfly effect of any disruption,
+                determining which Tier-1 assemblies will fail and when.
+              </p>
+            </article>
+            <article class="advantage-card">
+              <h3>Lower Emergency Spend</h3>
+              <p>
+                Early alerts eliminate surprise spot-buys and air freight premiums,
+                keeping logistics within budgeted lanes.
+              </p>
+            </article>
+            <article class="advantage-card">
+              <h3>Automated Intelligence</h3>
+              <p>
+                Python scrapers shoulder the monitoring burden, filtering thousands of
+                sources and geo-matching risks to your supplier coordinates.
+              </p>
+            </article>
+            <article class="advantage-card">
+              <h3>Dynamic Hybrid ETAs</h3>
+              <p>
+                LinkNode fuses live movement with forward-looking risk to produce an
+                “honest ETA” your customers can depend on.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="compliance" aria-labelledby="compliance-title">
+          <header class="section-heading">
+            <h2 id="compliance-title">Digital Contract &amp; Compliance Tracking</h2>
+            <p>
+              Ensure every node in the supply chain is connected, compliant, and ready
+              for audits.
+            </p>
+          </header>
+          <div class="compliance-grid">
+            <article class="compliance-card">
+              <span class="compliance-badge">Smart Contractual Visibility</span>
+              <h3>Digital Linkage Contracts</h3>
+              <p>
+                Each invitation spawns a contract binding sub-suppliers to your quality
+                and transparency standards.
+              </p>
+              <p>
+                If a Tier-3 node hides a disruption, LinkNode flags the breach and
+                schedules a compliance audit.
+              </p>
+            </article>
+            <article class="compliance-card">
+              <span class="compliance-badge">Automated Document Vault</span>
+              <h3>Certifications with Expiry Intelligence</h3>
+              <p>
+                Suppliers upload ISO, environmental, and ESG credentials to the MongoDB
+                vault. Auto-expiration alerts flip nodes to orange when documents lapse.
+              </p>
+            </article>
+            <article class="compliance-card">
+              <span class="compliance-badge">Ethical Sourcing Controls</span>
+              <h3>Traceable ESG Clauses</h3>
+              <p>
+                Anti-slavery and sustainability clauses travel down the chain, giving
+                anchors proof of ethical sourcing for regulators and customers.
+              </p>
+            </article>
+            <article class="compliance-card">
+              <span class="compliance-badge">Performance-Linked Contracts</span>
+              <h3>SLA Enforcement</h3>
+              <p>
+                Real-time logistics data compares actual performance to contractual
+                promises, triggering reviews when ETAs trend over agreed thresholds.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="tech-execution" aria-labelledby="tech-title">
+          <header class="section-heading">
+            <h2 id="tech-title">Updated Technical Execution</h2>
+            <p>
+              Core components underpinning digital contracts, compliance, and data
+              integrity.
+            </p>
+          </header>
+          <div class="execution-table-wrapper">
+            <table class="execution-table" aria-describedby="tech-title">
+              <thead>
+                <tr>
+                  <th scope="col">Feature Component</th>
+                  <th scope="col">Technology</th>
+                  <th scope="col">Role</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Document Storage</th>
+                  <td>MongoDB GridFS</td>
+                  <td>Stores PDF contracts and certificates efficiently at scale.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Compliance Logic</th>
+                  <td>Node.js Cron Jobs</td>
+                  <td>Runs daily scans for expired documents and SLA breaches.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Integrity</th>
+                  <td>SHA-256 Hashing</td>
+                  <td>Locks document state to prevent tampering after upload.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="architecture-summary" aria-labelledby="architecture-title">
+          <header class="section-heading">
+            <h2 id="architecture-title">Architecture at a Glance</h2>
+            <p>
+              Summarize the technology stack powering LinkNode’s predictive supply
+              chain orchestration.
+            </p>
+          </header>
+          <div class="architecture-table-wrapper">
+            <table class="architecture-table" aria-describedby="architecture-title">
+              <thead>
+                <tr>
+                  <th scope="col">Component</th>
+                  <th scope="col">Technology</th>
+                  <th scope="col">Primary Role</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">UI</th>
+                  <td>React.js</td>
+                  <td>Visualizes supplier tree, risk alerts, and action center.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Logic</th>
+                  <td>Node.js (Express)</td>
+                  <td>Manages hierarchy, $graphLookup queries, and API routing.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Database</th>
+                  <td>MongoDB</td>
+                  <td>Stores supplier documents, risks, and inventory telemetry.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Intelligence</th>
+                  <td>Python</td>
+                  <td>Scrapes, geo-matches, and writes risk signals.</td>
+                </tr>
+                <tr>
+                  <th scope="row">External</th>
+                  <td>News/GPS APIs</td>
+                  <td>Feeds live disruption data and logistics positions.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="value-proposition" aria-labelledby="value-title">
+          <header class="section-heading">
+            <h2 id="value-title">Value Proposition Comparison</h2>
+            <p>
+              Highlight the leap from reactive, Tier-1 bound operations to LinkNode’s
+              proactive, multilayer visibility.
+            </p>
+          </header>
+          <div class="comparison-table-wrapper">
+            <table class="comparison-table" aria-describedby="value-title">
+              <thead>
+                <tr>
+                  <th scope="col">Feature</th>
+                  <th scope="col">Traditional SCM (Legacy)</th>
+                  <th scope="col">LinkNode (Modern)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Visibility</th>
+                  <td>Limited to Tier-1 relationships.</td>
+                  <td>Digital twin spanning Tier-1 to Tier-N networks.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Response</th>
+                  <td>Reactive firefighting after outages.</td>
+                  <td>Predictive intelligence with early alerts.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Sourcing</th>
+                  <td>Manual scramble for backup suppliers.</td>
+                  <td>Instant, AI-curated Plan B recommendations.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Data Usage</th>
+                  <td>Static historical reports.</td>
+                  <td>Live global news, weather, and logistics feeds.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="real-time" aria-labelledby="real-time-title">
+          <header class="section-heading">
+            <h2 id="real-time-title">Real-Time Scenario: Shanghai Port Strike</h2>
+            <p>
+              Watch how LinkNode translates a sudden logistics disruption into
+              proactive mitigation within minutes.
+            </p>
+          </header>
+          <div class="scenario-grid">
+            <div class="scenario-visual" aria-hidden="true">
+              <div class="scenario-map"></div>
+              <div class="scenario-lane"></div>
+              <div class="scenario-pulse origin"></div>
+              <div class="scenario-pulse destination"></div>
+              <div class="scenario-airlift"></div>
+            </div>
+            <div class="scenario-content">
+              <div class="scenario-progress" aria-hidden="true">
+                <div class="scenario-progress-fill"></div>
+              </div>
+              <ol class="scenario-timeline">
+                <li class="scenario-step active" data-step="0">
+                  <div class="step-meta">
+                    <span class="step-time">00:00</span>
+                    <span class="step-label">Detection</span>
+                  </div>
+                  <h4>Risk Engine flags Yangshan Port strike</h4>
+                  <p>
+                    Python scrapers pull breaking news from NewsAPI, tag
+                    “port strike” near Shanghai, and mark it High severity.
+                  </p>
+                </li>
+                <li class="scenario-step" data-step="1">
+                  <div class="step-meta">
+                    <span class="step-time">00:05</span>
+                    <span class="step-label">Mapping</span>
+                  </div>
+                  <h4>Node.js maps impacted copper supplier</h4>
+                  <p>
+                    $graphLookup matches the strike geo-coordinates to Tier-2
+                    supplier <em>Shanghai Cathode Metals</em> feeding Aura Motors.
+                  </p>
+                </li>
+                <li class="scenario-step" data-step="2">
+                  <div class="step-meta">
+                    <span class="step-time">00:08</span>
+                    <span class="step-label">Propagation</span>
+                  </div>
+                  <h4>Production delay forecasted</h4>
+                  <p>
+                    Inventory ledger shows 9 days of buffer; assembly Line B is
+                    predicted to miss quotas in 22 days without intervention.
+                  </p>
+                </li>
+                <li class="scenario-step" data-step="3">
+                  <div class="step-meta">
+                    <span class="step-time">00:12</span>
+                    <span class="step-label">Mitigation</span>
+                  </div>
+                  <h4>Plan B supplier activated</h4>
+                  <p>
+                    Action Center recommends <em>Busan Electro Metals</em>; logistics
+                    shifts to air freight to hold delivery dates with +3% cost.
+                  </p>
+                </li>
+              </ol>
+              <div class="scenario-kpis" role="list">
+                <div class="kpi-card" role="listitem">
+                  <span class="kpi-label">Avoided Downtime</span>
+                  <span class="kpi-value">22 days</span>
+                </div>
+                <div class="kpi-card" role="listitem">
+                  <span class="kpi-label">Cost Impact</span>
+                  <span class="kpi-value">+3% logistics</span>
+                </div>
+                <div class="kpi-card" role="listitem">
+                  <span class="kpi-label">Decision Window</span>
+                  <span class="kpi-value">12 minutes</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>LinkNode &mdash; Predictive Supply Chain Preparedness</p>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

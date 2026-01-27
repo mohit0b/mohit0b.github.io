@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LinkNode Phase Flowchart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Fira+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: radial-gradient(circle at 20% 20%, #0f2944, #060913 60%);
+        --card-bg: rgba(11, 24, 36, 0.92);
+        --accent: #48e5c2;
+        --accent-soft: rgba(72, 229, 194, 0.18);
+        --text: #f1f5f9;
+        --text-muted: rgba(241, 245, 249, 0.7);
+        --shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+        --border: rgba(255, 255, 255, 0.08);
+        --font-heading: "Space Grotesk", sans-serif;
+        --font-body: "Fira Sans", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+        display: flex;
+        justify-content: center;
+      }
+
+      .page {
+        width: min(1100px, 100%);
+        padding: clamp(32px, 4vw, 72px);
+      }
+
+      header.hero {
+        text-align: center;
+        margin-bottom: clamp(40px, 6vw, 64px);
+      }
+
+      header.hero span.badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        border: 1px solid rgba(72, 229, 194, 0.3);
+        color: var(--accent);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+      }
+
+      header.hero h1 {
+        font-family: var(--font-heading);
+        font-size: clamp(2.2rem, 4vw, 3.2rem);
+        margin: 18px 0 16px;
+      }
+
+      header.hero p {
+        color: var(--text-muted);
+        max-width: 680px;
+        margin: 0 auto;
+        line-height: 1.6;
+        font-size: 1rem;
+      }
+
+      .flow {
+        position: relative;
+        display: grid;
+        gap: clamp(28px, 4vw, 36px);
+      }
+
+      .phase {
+        position: relative;
+        padding: clamp(24px, 4vw, 32px);
+        background: var(--card-bg);
+        border-radius: 24px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        opacity: 0;
+        transform: translateY(32px);
+        animation: fadeUp 0.85s ease forwards;
+      }
+
+      .phase::before {
+        content: "";
+        position: absolute;
+        left: 32px;
+        top: -36px;
+        width: 12px;
+        height: 36px;
+        background: linear-gradient(
+          180deg,
+          rgba(72, 229, 194, 0.4),
+          rgba(72, 229, 194, 0)
+        );
+        animation: pulseLine 2.6s ease-in-out infinite;
+      }
+
+      .phase:first-child::before {
+        display: none;
+      }
+
+      .phase:not(:first-child)::after {
+        content: "";
+        position: absolute;
+        left: 31px;
+        top: -20px;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 16px rgba(72, 229, 194, 0.6);
+        animation: drop 2.6s ease-in-out infinite;
+      }
+
+      .phase-heading {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .phase-tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        background: rgba(72, 229, 194, 0.16);
+        color: var(--accent);
+        font-family: var(--font-heading);
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .phase h2 {
+        margin: 0;
+        font-family: var(--font-heading);
+        font-size: 1.6rem;
+      }
+
+      .phase h3 {
+        margin: 8px 0 0;
+        font-family: var(--font-heading);
+        font-size: 1.05rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(241, 245, 249, 0.65);
+      }
+
+      .phase ul {
+        margin: 18px 0 0;
+        padding-left: 20px;
+        color: var(--text-muted);
+        display: grid;
+        gap: 12px;
+      }
+
+      .phase ul li::marker {
+        color: var(--accent);
+      }
+
+      .output {
+        margin-top: clamp(32px, 6vw, 48px);
+        padding: clamp(24px, 4vw, 32px);
+        border-radius: 24px;
+        border: 1px solid rgba(72, 229, 194, 0.28);
+        background: linear-gradient(160deg, rgba(16, 38, 49, 0.95), rgba(6, 11, 20, 0.9));
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(28px);
+        animation: fadeUp 0.9s ease forwards 1s;
+      }
+
+      .output span {
+        letter-spacing: 0.12em;
+        font-size: 0.88rem;
+        color: rgba(241, 245, 249, 0.7);
+      }
+
+      .output h2 {
+        margin: 0;
+        font-family: var(--font-heading);
+        font-size: 1.9rem;
+        color: var(--accent);
+      }
+
+      .summary {
+        margin-top: clamp(40px, 6vw, 56px);
+        opacity: 0;
+        transform: translateY(24px);
+        animation: fadeUp 0.9s ease forwards 1.2s;
+      }
+
+      .summary table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid rgba(72, 229, 194, 0.16);
+        box-shadow: var(--shadow);
+        background: rgba(11, 24, 36, 0.92);
+      }
+
+      .summary th,
+      .summary td {
+        padding: 18px 22px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        text-align: left;
+      }
+
+      .summary thead {
+        background: rgba(15, 35, 48, 0.9);
+        font-family: var(--font-heading);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .summary tbody tr:nth-child(even) {
+        background: rgba(15, 29, 44, 0.6);
+      }
+
+      @media (max-width: 700px) {
+        .phase::before {
+          left: 20px;
+        }
+
+        .phase {
+          padding: 24px;
+        }
+      }
+
+      .phase:nth-of-type(1) {
+        animation-delay: 0.1s;
+      }
+
+      .phase:nth-of-type(2) {
+        animation-delay: 0.3s;
+      }
+
+      .phase:nth-of-type(3) {
+        animation-delay: 0.5s;
+      }
+
+      .phase:nth-of-type(4) {
+        animation-delay: 0.7s;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(32px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes pulseLine {
+        0%,
+        100% {
+          opacity: 0.2;
+          transform: scaleY(0.8);
+        }
+        50% {
+          opacity: 1;
+          transform: scaleY(1);
+        }
+      }
+
+      @keyframes drop {
+        0% {
+          transform: translateY(-24px);
+          opacity: 0;
+        }
+        30% {
+          opacity: 1;
+        }
+        70% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(24px);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <span class="badge">LinkNode Layered Flow</span>
+        <h1>From Network Mapping to Business Continuity</h1>
+        <p>
+          Visualize how LinkNode ingests supplier data, monitors global risk, propagates
+          impact, and pivots sourcing to keep production lines running without surprises.
+        </p>
+      </header>
+
+      <main class="flow">
+        <section class="phase" id="phase-1">
+          <div class="phase-heading">
+            <div class="phase-tag">1</div>
+            <div>
+              <h2>Data Ingestion &amp; Network Mapping</h2>
+              <h3>Top Layer</h3>
+            </div>
+          </div>
+          <ul>
+            <li>
+              <strong>Anchor Registration:</strong> The main client creates the primary
+              account and dashboard.
+            </li>
+            <li>
+              <strong>Hierarchical Onboarding:</strong> Anchor invites Tier 1
+              &rarr; Tier 1 invites Tier 2 &rarr; Tier 2 invites Tier 3 raw material
+              sources.
+            </li>
+            <li>
+              <strong>Digital Contract Vault:</strong> Suppliers upload ISO certifications,
+              ESG compliance records, and SLAs.
+            </li>
+            <li>
+              <strong>Global Pool Entry:</strong> Independent suppliers join via the
+              open discovery pool.
+            </li>
+            <li>
+              <strong>Storage:</strong> MongoDB parent-child schema records every node
+              and document.
+            </li>
+          </ul>
+        </section>
+
+        <section class="phase" id="phase-2">
+          <div class="phase-heading">
+            <div class="phase-tag">2</div>
+            <div>
+              <h2>Intelligence &amp; Monitoring</h2>
+              <h3>Processing Layer</h3>
+            </div>
+          </div>
+          <ul>
+            <li>
+              <strong>Live Data Fetching:</strong> Python risk engine gathers disruption
+              keywords from news and weather APIs while tracking live logistics streams.
+            </li>
+            <li>
+              <strong>Geospatial Matching:</strong> Disruption radius is compared against
+              supplier GPS coordinates stored in MongoDB.
+            </li>
+            <li>
+              <strong>Condition Check:</strong> Nodes outside risk zones stay green;
+              impacted suppliers advance to impact analysis.
+            </li>
+          </ul>
+        </section>
+
+        <section class="phase" id="phase-3">
+          <div class="phase-heading">
+            <div class="phase-tag">3</div>
+            <div>
+              <h2>Risk Propagation &amp; Impact Calculation</h2>
+              <h3>Analysis Layer</h3>
+            </div>
+          </div>
+          <ul>
+            <li>
+              <strong>Recursive Graph Traversal:</strong> Node.js leverages MongoDB
+              $graphLookup to trace the butterfly effect through the chain.
+            </li>
+            <li>
+              <strong>Butterfly Logic:</strong> Track the path from the affected Tier-3
+              node up to the anchor and inspect stock buffers at each level.
+            </li>
+            <li>
+              <strong>Predictive Metrics:</strong> Compute delay days (e.g., 18-day cobalt
+              gap) and production shortfalls (e.g., 500 EVs delayed next month).
+            </li>
+          </ul>
+        </section>
+
+        <section class="phase" id="phase-4">
+          <div class="phase-heading">
+            <div class="phase-tag">4</div>
+            <div>
+              <h2>Mitigation &amp; Resolution</h2>
+              <h3>Bottom Layer</h3>
+            </div>
+          </div>
+          <ul>
+            <li>
+              <strong>Dashboard Alerting:</strong> UI surfaces red alerts with the impacted
+              contract and severity.
+            </li>
+            <li>
+              <strong>Contractual Enforcement:</strong> Digital contracts are inspected
+              for penalty clauses and force majeure logic.
+            </li>
+            <li>
+              <strong>Alternative Sourcing:</strong> Algorithm filters the discovery pool
+              for compliance, lead time, and material grade matches.
+            </li>
+            <li>
+              <strong>Pivot Execution:</strong> Client approves the backup supplier and
+              establishes a new digital linkage instantly.
+            </li>
+          </ul>
+        </section>
+
+        <section class="output">
+          <span>Outcome</span>
+          <h2>Business Continuity Maintained</h2>
+          <p>
+            LinkNode converts early warnings into decisive actions, keeping production
+            schedules intact and contracts honored.
+          </p>
+        </section>
+
+        <section class="summary" aria-labelledby="summary-title">
+          <h2 id="summary-title" style="font-family: var(--font-heading); margin-bottom: 18px">
+            Layer-to-Technology Summary
+          </h2>
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Level</th>
+                <th scope="col">Role</th>
+                <th scope="col">Key Technology</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Top (Input)</th>
+                <td>Connectivity</td>
+                <td>React.js onboarding, MongoDB document storage</td>
+              </tr>
+              <tr>
+                <th scope="row">Middle (Logic)</th>
+                <td>Prediction</td>
+                <td>Python NLP, geospatial analysis</td>
+              </tr>
+              <tr>
+                <th scope="row">Middle (Math)</th>
+                <td>Propagation</td>
+                <td>MongoDB $graphLookup, Node.js calculations</td>
+              </tr>
+              <tr>
+                <th scope="row">Bottom (Result)</th>
+                <td>Resolution</td>
+                <td>Alternative sourcing algorithm, contract vault</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
