@@ -1,0 +1,1815 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LinkNode – Execution Plan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Fira+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: radial-gradient(circle at 18% 20%, #0d2e4e, #040712 60%);
+        --card-bg: rgba(11, 24, 38, 0.94);
+        --card-alt: rgba(14, 33, 49, 0.9);
+        --accent: #48e5c2;
+        --accent-soft: rgba(72, 229, 194, 0.16);
+        --text: #f1f5f9;
+        --muted: rgba(241, 245, 249, 0.72);
+        --border: rgba(255, 255, 255, 0.08);
+        --shadow: 0 20px 48px rgba(3, 11, 20, 0.55);
+        --font-heading: "Space Grotesk", sans-serif;
+        --font-body: "Fira Sans", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+        display: flex;
+        justify-content: center;
+      }
+
+      .page {
+        width: min(1180px, 100%);
+        padding: clamp(32px, 4vw, 70px);
+        display: grid;
+        gap: clamp(36px, 5vw, 60px);
+      }
+
+      header.hero {
+        text-align: center;
+        display: grid;
+        gap: 22px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 9px 18px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        border: 1px solid rgba(72, 229, 194, 0.28);
+        color: var(--accent);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: var(--font-heading);
+        font-size: clamp(2.4rem, 4.2vw, 3.4rem);
+        letter-spacing: -0.01em;
+      }
+
+      header.hero p {
+        margin: 0 auto;
+        max-width: 760px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .nav-actions {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      a.button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 28px;
+        border-radius: 999px;
+        font-family: var(--font-heading);
+        font-size: 0.92rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      a.button.primary {
+        background: linear-gradient(135deg, rgba(72, 229, 194, 0.94), rgba(72, 229, 194, 0.6));
+        color: #031521;
+        border: 1px solid rgba(72, 229, 194, 0.35);
+        box-shadow: 0 18px 42px rgba(10, 70, 64, 0.35);
+      }
+
+      a.button.secondary {
+        background: transparent;
+        color: var(--accent);
+        border: 1px solid rgba(72, 229, 194, 0.3);
+        box-shadow: 0 14px 36px rgba(7, 24, 38, 0.5);
+      }
+
+      a.button:hover,
+      a.button:focus {
+        transform: translateY(-3px);
+      }
+
+      a.button:focus-visible {
+        outline: 2px solid rgba(72, 229, 194, 0.85);
+        outline-offset: 4px;
+      }
+
+      section.plan-block {
+        background: var(--card-bg);
+        border-radius: 28px;
+        border: 1px solid var(--border);
+        padding: clamp(28px, 4vw, 40px);
+        box-shadow: var(--shadow);
+        display: grid;
+        gap: clamp(26px, 4vw, 36px);
+      }
+
+      section.plan-block > header {
+        display: grid;
+        gap: 12px;
+      }
+
+      section.plan-block h2 {
+        margin: 0;
+        font-family: var(--font-heading);
+        font-size: clamp(1.8rem, 3vw, 2.2rem);
+        letter-spacing: 0.02em;
+      }
+
+      section.plan-block p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .phase-list {
+        display: grid;
+        gap: clamp(20px, 3vw, 30px);
+      }
+
+      .phase-card {
+        background: var(--card-alt);
+        border: 1px solid rgba(72, 229, 194, 0.12);
+        border-radius: 22px;
+        padding: clamp(22px, 3.4vw, 30px);
+        display: grid;
+        gap: 18px;
+      }
+
+      .phase-heading {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: baseline;
+      }
+
+      .phase-heading span.emoji {
+        font-size: 1.8rem;
+        line-height: 1;
+      }
+
+      .phase-heading h3 {
+        margin: 0;
+        font-family: var(--font-heading);
+        font-size: 1.2rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .phase-heading small {
+        color: rgba(241, 245, 249, 0.62);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.82rem;
+      }
+
+      .phase-goal {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .phase-columns {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: clamp(18px, 3vw, 28px);
+      }
+
+      .column {
+        background: rgba(8, 21, 33, 0.9);
+        border-radius: 18px;
+        border: 1px solid rgba(72, 229, 194, 0.1);
+        padding: 20px 22px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .column h4 {
+        margin: 0;
+        font-family: var(--font-heading);
+        font-size: 1rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: rgba(241, 245, 249, 0.75);
+      }
+
+      .column ul {
+        margin: 0;
+        padding-left: 20px;
+        display: grid;
+        gap: 10px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .column ul li::marker {
+        color: var(--accent);
+      }
+
+      .todo-phase {
+        background: var(--card-alt);
+        border: 1px solid rgba(72, 229, 194, 0.14);
+        border-radius: 22px;
+        padding: clamp(24px, 3.6vw, 32px);
+        display: grid;
+        gap: 18px;
+      }
+
+      .todo-header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: baseline;
+      }
+
+      .todo-header span.emoji {
+        font-size: 1.8rem;
+        line-height: 1;
+      }
+
+      .todo-header h3 {
+        margin: 0;
+        font-family: var(--font-heading);
+        font-size: 1.18rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .todo-header small {
+        color: rgba(241, 245, 249, 0.6);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+      }
+
+      .todo-goal {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .todo-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 12px;
+      }
+
+      .todo-list li {
+        display: grid;
+        gap: 8px;
+        color: var(--muted);
+        line-height: 1.55;
+        border: 1px solid rgba(72, 229, 194, 0.1);
+        border-radius: 16px;
+        padding: 14px 16px;
+        background: rgba(7, 20, 32, 0.9);
+      }
+
+      .todo-task {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        font-family: var(--font-body);
+      }
+
+      .todo-checkbox {
+        font-family: "Space Grotesk", sans-serif;
+        letter-spacing: 0.08em;
+        color: rgba(241, 245, 249, 0.82);
+        flex-shrink: 0;
+      }
+
+      .todo-task strong {
+        color: var(--accent);
+        font-weight: 500;
+      }
+
+      .todo-files {
+        display: grid;
+        gap: 4px;
+        color: rgba(241, 245, 249, 0.7);
+        font-size: 0.9rem;
+      }
+
+      .todo-files strong {
+        color: var(--accent);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+      }
+
+      .file-plan {
+        display: grid;
+        gap: clamp(18px, 3vw, 26px);
+      }
+
+      .file-plan .folder-block {
+        background: rgba(7, 20, 30, 0.9);
+        border: 1px solid rgba(72, 229, 194, 0.12);
+        border-radius: 20px;
+        padding: clamp(22px, 3.2vw, 30px);
+        display: grid;
+        gap: 16px;
+      }
+
+      pre.folder-tree {
+        margin: 0;
+        padding: 16px 18px;
+        background: rgba(4, 14, 24, 0.96);
+        border-radius: 16px;
+        border: 1px solid rgba(72, 229, 194, 0.12);
+        font-family: "Fira Code", monospace;
+        font-size: 0.84rem;
+        line-height: 1.6;
+        color: rgba(241, 245, 249, 0.84);
+        overflow-x: auto;
+      }
+
+      .tools-used {
+        display: grid;
+        gap: 8px;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      footer {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      footer strong {
+        color: var(--accent);
+      }
+
+      @media (max-width: 768px) {
+        .phase-columns {
+          grid-template-columns: 1fr;
+        }
+
+        .column {
+          padding: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <span class="badge">LinkNode Roadmap</span>
+        <h1>Execution Plan</h1>
+        <p>
+          Detailed sprint-by-sprint guidance for delivering the LinkNode multi-tier supply chain digital twin, including frontline execution tasks and supporting asset creation.
+        </p>
+        <div class="nav-actions">
+          <a class="button primary" href="index.html">Back to Overview</a>
+          <a class="button secondary" href="flowchart.html">Layered Flowchart</a>
+          <a class="button secondary" href="index.html#flowchart-title">Phase-by-Phase Flow</a>
+        </div>
+      </header>
+
+      <section class="plan-block" aria-labelledby="execution-title">
+        <header>
+          <h2 id="execution-title">LinkNode – Execution Plan</h2>
+          <p>Multi-tier supply chain digital twin roadmap with goals, frontend, and backend deliverables for each phase.</p>
+        </header>
+
+        <div class="phase-list">
+          <article class="phase-card" id="phase-1">
+            <div class="phase-heading">
+              <span class="emoji" aria-hidden="true">1️⃣</span>
+              <div>
+                <h3>Data Foundation &amp; Supplier Network</h3>
+                <small>Phase 1</small>
+              </div>
+            </div>
+            <p class="phase-goal">Goal: Supply chain ni digital copy banavvi (who depends on whom).</p>
+            <div class="phase-columns">
+              <div class="column">
+                <h4>Frontend (HTML / CSS / JS)</h4>
+                <ul>
+                  <li>Create base layout with sidebar plus main screen.</li>
+                  <li>Build company registration screen (Anchor company).</li>
+                  <li>Add form to enter suppliers under company.</li>
+                  <li>Allow adding suppliers under suppliers (nested inputs).</li>
+                  <li>Create dropdown to select role (Main company / Supplier).</li>
+                  <li>Validate city name and location inputs.</li>
+                  <li>Show confirmation screen after saving data.</li>
+                  <li>Add loader animation while data saves.</li>
+                  <li>Build supplier list page with search option.</li>
+                  <li>Save login state in browser storage.</li>
+                  <li>Create one common JS file to talk to backend APIs.</li>
+                </ul>
+              </div>
+              <div class="column">
+                <h4>Backend (Python / Flask / MongoDB)</h4>
+                <ul>
+                  <li>Create MongoDB database and collections.</li>
+                  <li>Design supplier data model with parent link.</li>
+                  <li>Create API to save company and supplier data.</li>
+                  <li>Auto-generate unique supplier IDs.</li>
+                  <li>Store parent-child relationships.</li>
+                  <li>Create API to fetch supplier tree by company.</li>
+                  <li>Add basic login security.</li>
+                  <li>Track data changes (created / updated).</li>
+                  <li>Add sample Tier-3 suppliers using seed data.</li>
+                  <li>Handle API errors safely.</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="phase-card" id="phase-2">
+            <div class="phase-heading">
+              <span class="emoji" aria-hidden="true">2️⃣</span>
+              <div>
+                <h3>Network Map &amp; Visual Flow</h3>
+                <small>Phase 2</small>
+              </div>
+            </div>
+            <p class="phase-goal">Goal: Supply chain ne map par visually batavvi.</p>
+            <div class="phase-columns">
+              <div class="column">
+                <h4>Frontend (HTML / CSS / JS)</h4>
+                <ul>
+                  <li>Integrate interactive world map.</li>
+                  <li>Place suppliers as dots using city location.</li>
+                  <li>Show supplier details on click.</li>
+                  <li>Draw connecting lines between suppliers.</li>
+                  <li>Use colors for status (Safe / Risk).</li>
+                  <li>Add region focus buttons (India, Europe, USA).</li>
+                  <li>Toggle connections on/off.</li>
+                  <li>Switch map view modes.</li>
+                  <li>Auto-focus map where most suppliers exist.</li>
+                  <li>Highlight main company visually.</li>
+                </ul>
+              </div>
+              <div class="column">
+                <h4>Backend (Python / Flask)</h4>
+                <ul>
+                  <li>Create API to send supplier location data.</li>
+                  <li>Convert data into map-friendly format.</li>
+                  <li>Group suppliers by level.</li>
+                  <li>Validate stored location data.</li>
+                  <li>Send only required map data.</li>
+                  <li>Cache map data for speed.</li>
+                  <li>Filter suppliers by visible area.</li>
+                  <li>Serve icons and marker assets.</li>
+                  <li>Provide quick info API for map popups.</li>
+                  <li>Log map access activity.</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="phase-card" id="phase-3">
+            <div class="phase-heading">
+              <span class="emoji" aria-hidden="true">3️⃣</span>
+              <div>
+                <h3>Sentinel – Risk News Detection</h3>
+                <small>Phase 3</small>
+              </div>
+            </div>
+            <p class="phase-goal">Goal: Real-world problems ne system sathe jodvu.</p>
+            <div class="phase-columns">
+              <div class="column">
+                <h4>Frontend (HTML / CSS / JS)</h4>
+                <ul>
+                  <li>Show live news alert bar.</li>
+                  <li>Display risk cards in sidebar.</li>
+                  <li>Show “time ago” format for alerts.</li>
+                  <li>Blink indicator for new risk.</li>
+                  <li>Open full news detail popup.</li>
+                  <li>Allow dismissing alerts.</li>
+                  <li>Use icons for different risk types.</li>
+                  <li>Filter alerts by severity.</li>
+                  <li>Mark alerts as read.</li>
+                  <li>Optional sound alert for major risks.</li>
+                </ul>
+              </div>
+              <div class="column">
+                <h4>Backend (Python Worker)</h4>
+                <ul>
+                  <li>Connect to news API securely.</li>
+                  <li>Scan news for risk keywords.</li>
+                  <li>Identify affected city from news.</li>
+                  <li>Save risk events in database.</li>
+                  <li>Mark suppliers in that city as “At Risk”.</li>
+                  <li>Limit API calls.</li>
+                  <li>Keep last 30 days of history.</li>
+                  <li>Notify main server when risk detected.</li>
+                  <li>Link news to suppliers automatically.</li>
+                  <li>Store severity level.</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="phase-card" id="phase-4">
+            <div class="phase-heading">
+              <span class="emoji" aria-hidden="true">4️⃣</span>
+              <div>
+                <h3>Risk Impact &amp; Delay Calculation</h3>
+                <small>Phase 4</small>
+              </div>
+            </div>
+            <p class="phase-goal">Goal: Ek problem thi ketli delay thase te batavvu.</p>
+            <div class="phase-columns">
+              <div class="column">
+                <h4>Frontend (HTML / CSS / JS)</h4>
+                <ul>
+                  <li>Turn supply lines red when risk hits.</li>
+                  <li>Show list of affected suppliers.</li>
+                  <li>Display total delay days clearly.</li>
+                  <li>Show impacted materials/products.</li>
+                  <li>Animate flow of risk visually.</li>
+                  <li>Show delay chart.</li>
+                  <li>Auto-zoom to problem area.</li>
+                  <li>Highlight weakest connection.</li>
+                  <li>Hover effects for clarity.</li>
+                  <li>Show overall risk meter.</li>
+                </ul>
+              </div>
+              <div class="column">
+                <h4>Backend (Python / Logic)</h4>
+                <ul>
+                  <li>Fetch all at-risk suppliers.</li>
+                  <li>Calculate delay using buffer days.</li>
+                  <li>Track direct &amp; indirect impact.</li>
+                  <li>Store impact score.</li>
+                  <li>Find weakest supplier link.</li>
+                  <li>Save impact history.</li>
+                  <li>Provide API for impact summary.</li>
+                  <li>Optimize calculations.</li>
+                  <li>Prepare future prediction base.</li>
+                  <li>Trigger notifications.</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="phase-card" id="phase-5">
+            <div class="phase-heading">
+              <span class="emoji" aria-hidden="true">5️⃣</span>
+              <div>
+                <h3>Command Dashboard</h3>
+                <small>Phase 5</small>
+              </div>
+            </div>
+            <p class="phase-goal">Goal: Management mate clear overview.</p>
+            <div class="phase-columns">
+              <div class="column">
+                <h4>Frontend (HTML / CSS / JS)</h4>
+                <ul>
+                  <li>Show total suppliers count.</li>
+                  <li>Show risk distribution chart.</li>
+                  <li>Create region-wise health table.</li>
+                  <li>Dark mode professional UI.</li>
+                  <li>Add date filter.</li>
+                  <li>Supplier cards with mini graphs.</li>
+                  <li>Search supplier directly.</li>
+                  <li>Compliance progress bar.</li>
+                  <li>Smooth switch between views.</li>
+                  <li>Download report button.</li>
+                </ul>
+              </div>
+              <div class="column">
+                <h4>Backend (Analytics)</h4>
+                <ul>
+                  <li>Aggregate supplier health data.</li>
+                  <li>Find top risky suppliers.</li>
+                  <li>Calculate system health score.</li>
+                  <li>Add pagination.</li>
+                  <li>Provide dashboard KPIs.</li>
+                  <li>Track response times.</li>
+                  <li>Daily snapshot job.</li>
+                  <li>Group data by material.</li>
+                  <li>Secure analytics access.</li>
+                  <li>Enable data export.</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="phase-card" id="phase-6">
+            <div class="phase-heading">
+              <span class="emoji" aria-hidden="true">6️⃣</span>
+              <div>
+                <h3>Plan-B &amp; Alternative Suppliers</h3>
+                <small>Phase 6</small>
+              </div>
+            </div>
+            <p class="phase-goal">Goal: Problem ave to backup option batavvu.</p>
+            <div class="phase-columns">
+              <div class="column">
+                <h4>Frontend (HTML / CSS / JS)</h4>
+                <ul>
+                  <li>Show recommended alternative suppliers.</li>
+                  <li>Compare current vs alternative.</li>
+                  <li>Add switch supplier option.</li>
+                  <li>Show cost impact visually.</li>
+                  <li>Highlight new route on map.</li>
+                  <li>Trust badges for suppliers.</li>
+                  <li>Alert if no alternative exists.</li>
+                  <li>Undo switch option.</li>
+                  <li>Clear confirmation messages.</li>
+                  <li>History of switches.</li>
+                </ul>
+              </div>
+              <div class="column">
+                <h4>Backend (Search Logic)</h4>
+                <ul>
+                  <li>Search suppliers by material.</li>
+                  <li>Filter only safe locations.</li>
+                  <li>Rank by distance &amp; trust.</li>
+                  <li>Update supply links on switch.</li>
+                  <li>Check compliance before switching.</li>
+                  <li>Log mitigation actions.</li>
+                  <li>Allow manual backup entry.</li>
+                  <li>Adjust buffer logic.</li>
+                  <li>Store switch history.</li>
+                  <li>Expose recommendation API.</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="phase-card" id="phase-7">
+            <div class="phase-heading">
+              <span class="emoji" aria-hidden="true">7️⃣</span>
+              <div>
+                <h3>Digital Compliance Vault</h3>
+                <small>Phase 7</small>
+              </div>
+            </div>
+            <p class="phase-goal">Goal: Legal &amp; quality documents track karva.</p>
+            <div class="phase-columns">
+              <div class="column">
+                <h4>Frontend (HTML / CSS / JS)</h4>
+                <ul>
+                  <li>Upload documents via drag-drop.</li>
+                  <li>Show compliance status dashboard.</li>
+                  <li>Expiry countdown.</li>
+                  <li>Preview documents.</li>
+                  <li>Filter by document type.</li>
+                  <li>Verified animation.</li>
+                  <li>Show missing documents.</li>
+                  <li>Bulk download option.</li>
+                  <li>Supplier compliance ranking.</li>
+                  <li>Digital sign placeholder.</li>
+                </ul>
+              </div>
+              <div class="column">
+                <h4>Backend (Storage &amp; Logic)</h4>
+                <ul>
+                  <li>Store documents securely.</li>
+                  <li>Save expiry dates.</li>
+                  <li>Check expiring documents daily.</li>
+                  <li>Send reminders.</li>
+                  <li>Track uploads.</li>
+                  <li>Validate file type &amp; size.</li>
+                  <li>Hash files for integrity.</li>
+                  <li>Disable suppliers if expired.</li>
+                  <li>Provide document APIs.</li>
+                  <li>Maintain audit logs.</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="phase-card" id="phase-8">
+            <div class="phase-heading">
+              <span class="emoji" aria-hidden="true">8️⃣</span>
+              <div>
+                <h3>Demo, Deployment &amp; Simulation</h3>
+                <small>Phase 8</small>
+              </div>
+            </div>
+            <p class="phase-goal">Goal: Final showcase &amp; submission ready.</p>
+            <div class="phase-columns">
+              <div class="column">
+                <h4>Frontend (HTML / CSS / JS)</h4>
+                <ul>
+                  <li>Hidden demo controls.</li>
+                  <li>Trigger fake disasters.</li>
+                  <li>Speed control for demo.</li>
+                  <li>Guided walkthrough overlay.</li>
+                  <li>Reset demo state.</li>
+                  <li>Final UI polish.</li>
+                  <li>Mobile preview.</li>
+                  <li>Scenario autoplay.</li>
+                  <li>Developer contact panel.</li>
+                  <li>Production badge.</li>
+                </ul>
+              </div>
+              <div class="column">
+                <h4>Backend (Deployment)</h4>
+                <ul>
+                  <li>Deploy backend service.</li>
+                  <li>Run background risk worker.</li>
+                  <li>Secure environment variables.</li>
+                  <li>Demo database setup.</li>
+                  <li>Enable logging.</li>
+                  <li>Optimize database.</li>
+                  <li>Health check API.</li>
+                  <li>Security validation.</li>
+                  <li>CORS configuration.</li>
+                  <li>Final system check.</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="plan-block" aria-labelledby="files-title">
+        <header>
+          <h2 id="files-title">LinkNode – Phase-Wise File Creation Plan</h2>
+          <p>Structured view of the folders, files, and technologies touched in each sprint.</p>
+        </header>
+
+        <div class="phase-list file-plan">
+          <article class="folder-block" id="files-1">
+            <div class="phase-heading">
+              <span class="emoji" aria-hidden="true">1️⃣</span>
+              <div>
+                <h3>Data Foundation &amp; Supplier Network</h3>
+                <small>Phase 1</small>
+              </div>
+            </div>
+            <div class="phase-columns">
+              <div class="column">
+                <h4>Frontend Files</h4>
+                <pre class="folder-tree"><code>frontend/
+│
+├── index.html          → Login / Anchor registration page
+├── dashboard.html      → Supplier directory view
+│
+├── css/
+│   └── style.css       → Layout, forms, sidebar, modal UI
+│
+├── js/
+│   ├── onboard.js      → Supplier onboarding logic
+│   ├── dashboard.js    → Supplier list + search
+│   └── api.js          → All backend API calls (fetch/axios)</code></pre>
+                <div class="tools-used">
+                  <strong>🛠 Used</strong>
+                  <span>HTML → Forms, layout</span>
+                  <span>CSS → Sidebar, modals, loaders</span>
+                  <span>JS → Dynamic supplier inputs, validation, API calls</span>
+                </div>
+              </div>
+              <div class="column">
+                <h4>Backend Files</h4>
+                <pre class="folder-tree"><code>backend/
+│
+├── app.py              → Main Flask app &amp; API routes
+├── config.py           → DB URI, secrets
+│
+├── models/
+│   └── supplier_model.py → Supplier schema logic
+│
+├── services/
+│   └── onboarding.py   → Save company + supplier logic
+│
+└── seed_data.py        → Dummy Tier-3 suppliers</code></pre>
+                <div class="tools-used">
+                  <strong>🛠 Used</strong>
+                  <span>Python → Flask APIs</span>
+                  <span>MongoDB → Store suppliers</span>
+                  <span>Logic → Parent-child linking</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="folder-block" id="files-2">
+            <div class="phase-heading">
+              <span class="emoji" aria-hidden="true">2️⃣</span>
+              <div>
+                <h3>Network Map &amp; Visualization</h3>
+                <small>Phase 2</small>
+              </div>
+            </div>
+            <div class="phase-columns">
+              <div class="column">
+                <h4>Frontend Files</h4>
+                <pre class="folder-tree"><code>frontend/
+│
+├── map.html            → Full screen supply chain map
+│
+├── css/
+│   └── map.css         → Map layout &amp; animations
+│
+├── js/
+│   ├── map.js          → Map rendering + markers
+│   └── map_api.js      → Fetch geo supplier data</code></pre>
+                <div class="tools-used">
+                  <strong>🛠 Used</strong>
+                  <span>Leaflet.js → Map</span>
+                  <span>JS → Markers, lines</span>
+                  <span>CSS → Pulsing anchor animation</span>
+                </div>
+              </div>
+              <div class="column">
+                <h4>Backend Files</h4>
+                <pre class="folder-tree"><code>backend/
+│
+├── services/
+│   └── geo_service.py  → Convert DB data to map format
+│
+└── routes/
+    └── geo.py          → /api/graph/geo endpoint</code></pre>
+                <div class="tools-used">
+                  <strong>🛠 Used</strong>
+                  <span>Python → Geo data formatting</span>
+                  <span>MongoDB → Coordinates fetch</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="folder-block" id="files-3">
+            <div class="phase-heading">
+              <span class="emoji" aria-hidden="true">3️⃣</span>
+              <div>
+                <h3>Sentinel – Risk Detection</h3>
+                <small>Phase 3</small>
+              </div>
+            </div>
+            <div class="phase-columns">
+              <div class="column">
+                <h4>Frontend Files</h4>
+                <pre class="folder-tree"><code>frontend/
+│
+├── js/
+│   ├── alerts.js       → News alerts UI
+│   └── notifications.js → Alert filters &amp; sound</code></pre>
+                <div class="tools-used">
+                  <strong>🛠 Used</strong>
+                  <span>JS → Alerts, filters</span>
+                  <span>HTML → Modals</span>
+                  <span>CSS → Blink indicators</span>
+                </div>
+              </div>
+              <div class="column">
+                <h4>Backend Files</h4>
+                <pre class="folder-tree"><code>backend/
+│
+├── services/
+│   ├── news_monitor.py → Fetch &amp; scan news
+│   └── risk_engine.py  → City → supplier tagging</code></pre>
+                <div class="tools-used">
+                  <strong>🛠 Used</strong>
+                  <span>Python → News API</span>
+                  <span>Keyword logic → Flood / strike</span>
+                  <span>MongoDB → Risk events</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="folder-block" id="files-4">
+            <div class="phase-heading">
+              <span class="emoji" aria-hidden="true">4️⃣</span>
+              <div>
+                <h3>Risk Impact &amp; Delay Engine</h3>
+                <small>Phase 4</small>
+              </div>
+            </div>
+            <div class="phase-columns">
+              <div class="column">
+                <h4>Frontend Files</h4>
+                <pre class="folder-tree"><code>frontend/
+│
+├── js/
+│   ├── impact.js       → Delay display &amp; charts
+│   └── risk_map.js     → Red lines &amp; animations</code></pre>
+                <div class="tools-used">
+                  <strong>🛠 Used</strong>
+                  <span>Chart.js → Delay charts</span>
+                  <span>JS → Auto zoom, UI updates</span>
+                </div>
+              </div>
+              <div class="column">
+                <h4>Backend Files</h4>
+                <pre class="folder-tree"><code>backend/
+│
+├── services/
+│   └── impact_engine.py → Delay &amp; ripple logic
+│
+└── routes/
+    └── impact.py        → /api/impact endpoint</code></pre>
+                <div class="tools-used">
+                  <strong>🛠 Used</strong>
+                  <span>Python → Buffer calculation</span>
+                  <span>MongoDB → RED suppliers</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="folder-block" id="files-5">
+            <div class="phase-heading">
+              <span class="emoji" aria-hidden="true">5️⃣</span>
+              <div>
+                <h3>Command Dashboard</h3>
+                <small>Phase 5</small>
+              </div>
+            </div>
+            <div class="phase-columns">
+              <div class="column">
+                <h4>Frontend Files</h4>
+                <pre class="folder-tree"><code>frontend/
+│
+├── dashboard.html
+│
+├── js/
+│   ├── kpi.js          → KPI counters
+│   ├── charts.js       → Charts &amp; graphs
+│   └── filters.js      → Date &amp; region filters</code></pre>
+                <div class="tools-used">
+                  <strong>🛠 Used</strong>
+                  <span>JS → Analytics UI</span>
+                  <span>Chart.js → Pie, bar charts</span>
+                </div>
+              </div>
+              <div class="column">
+                <h4>Backend Files</h4>
+                <pre class="folder-tree"><code>backend/
+│
+├── services/
+│   └── analytics.py    → Stats &amp; metrics
+│
+└── routes/
+    └── analytics.py    → /api/dashboard</code></pre>
+              </div>
+            </div>
+          </article>
+
+          <article class="folder-block" id="files-6">
+            <div class="phase-heading">
+              <span class="emoji" aria-hidden="true">6️⃣</span>
+              <div>
+                <h3>Plan-B &amp; Alternative Suppliers</h3>
+                <small>Phase 6</small>
+              </div>
+            </div>
+            <div class="phase-columns">
+              <div class="column">
+                <h4>Frontend Files</h4>
+                <pre class="folder-tree"><code>frontend/
+│
+├── js/
+│   ├── alternatives.js → Plan-B UI
+│   └── compare.js      → Compare suppliers</code></pre>
+                <div class="tools-used">
+                  <strong>🛠 Used</strong>
+                  <span>JS → Switch logic</span>
+                  <span>HTML → Modal comparison</span>
+                </div>
+              </div>
+              <div class="column">
+                <h4>Backend Files</h4>
+                <pre class="folder-tree"><code>backend/
+│
+├── services/
+│   └── mitigation.py   → Alternative search logic
+│
+└── routes/
+    └── alternatives.py → /api/alternatives</code></pre>
+              </div>
+            </div>
+          </article>
+
+          <article class="folder-block" id="files-7">
+            <div class="phase-heading">
+              <span class="emoji" aria-hidden="true">7️⃣</span>
+              <div>
+                <h3>Digital Compliance Vault</h3>
+                <small>Phase 7</small>
+              </div>
+            </div>
+            <div class="phase-columns">
+              <div class="column">
+                <h4>Frontend Files</h4>
+                <pre class="folder-tree"><code>frontend/
+│
+├── compliance.html
+│
+├── js/
+│   ├── upload.js       → Document upload
+│   └── compliance.js   → Expiry &amp; alerts</code></pre>
+                <div class="tools-used">
+                  <strong>🛠 Used</strong>
+                  <span>JS → File handling</span>
+                  <span>HTML → Upload UI</span>
+                </div>
+              </div>
+              <div class="column">
+                <h4>Backend Files</h4>
+                <pre class="folder-tree"><code>backend/
+│
+├── services/
+│   └── compliance.py   → Expiry check logic
+│
+└── routes/
+    └── documents.py    → Upload &amp; fetch docs</code></pre>
+              </div>
+            </div>
+          </article>
+
+          <article class="folder-block" id="files-8">
+            <div class="phase-heading">
+              <span class="emoji" aria-hidden="true">8️⃣</span>
+              <div>
+                <h3>Demo, Deployment &amp; Simulation</h3>
+                <small>Phase 8</small>
+              </div>
+            </div>
+            <div class="phase-columns">
+              <div class="column">
+                <h4>Frontend Files</h4>
+                <pre class="folder-tree"><code>frontend/
+│
+├── js/
+│   └── simulation.js   → Fake disaster triggers</code></pre>
+              </div>
+              <div class="column">
+                <h4>Backend Files</h4>
+                <pre class="folder-tree"><code>backend/
+│
+├── services/
+│   └── simulator.py    → Demo risk triggers
+│
+└── app.py              → Final API integration</code></pre>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="plan-block" aria-labelledby="todo-title">
+        <header>
+          <h2 id="todo-title">✅ LinkNode – File-Wise Implementation To-Do List</h2>
+          <p>Detailed checklist mapping every phase to its required implementation tasks and associated files.</p>
+        </header>
+
+        <div class="phase-list">
+          <article class="todo-phase" id="todo-phase-1">
+            <div class="todo-header">
+              <span class="emoji" aria-hidden="true">🔹</span>
+              <div>
+                <h3>Phase 1: Environment &amp; Core Setup</h3>
+              </div>
+            </div>
+            <ul class="todo-list">
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Initialize MongoDB Atlas cluster and create database <code>linknode_db</code></span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>(No local file – cloud setup)</span>
+                  <span>backend/.env (later store Mongo URI)</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Set up Python virtual environment and install Flask, PyMongo, Flask-CORS</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/requirements.txt</span>
+                  <span>backend/venv/ (virtual environment folder)</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Configure environment variables (DB URI, API keys)</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/.env</span>
+                  <span>backend/config.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Create base Flask app and <code>/health</code> endpoint</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/app.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Initialize frontend folder structure</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/</span>
+                  <span>├── index.html</span>
+                  <span>├── onboard.html</span>
+                  <span>├── dashboard.html</span>
+                  <span>├── map.html</span>
+                  <span>├── css/style.css</span>
+                  <span>└── js/api.js</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Build MainLayout shell (Navbar + Sidebar + Content Viewport)</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/index.html</span>
+                  <span>frontend/css/style.css</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Apply base theme (colors, fonts, spacing) using CSS / Tailwind</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/css/style.css</span>
+                </div>
+              </li>
+            </ul>
+          </article>
+
+          <article class="todo-phase" id="todo-phase-2">
+            <div class="todo-header">
+              <span class="emoji" aria-hidden="true">🔹</span>
+              <div>
+                <h3>Phase 2: Supplier Onboarding (Digital Twin Creation)</h3>
+              </div>
+            </div>
+            <ul class="todo-list">
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Design suppliers collection schema (flat-tag model)</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/models/supplier_model.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Add supplier fields (supplier_id, tier, city, lat, lng, material, parent_supplier_id, buffer_days, status)</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/models/supplier_model.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Create Supplier Onboarding Form</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/onboard.html</span>
+                  <span>frontend/css/style.css</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Add dynamic input fields for Tier-2 / Tier-3 suppliers</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/js/onboard.js</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Implement JS logic to add/remove supplier blocks</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/js/onboard.js</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Implement <code>POST /api/onboard_supplier</code></span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/app.py</span>
+                  <span>backend/services/onboarding_service.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Generate unique <code>supplier_id</code> automatically</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/services/id_generator.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Store parent-child linkage using <code>parent_supplier_id</code></span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/services/onboarding_service.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Add client-side validation (required fields, lat/lng range, buffer days)</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/js/onboard.js</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Design success confirmation modal</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/components/successModal.html</span>
+                  <span>frontend/js/modal.js</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Add loading skeletons during API submission</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/css/skeleton.css</span>
+                  <span>frontend/js/onboard.js</span>
+                </div>
+              </li>
+            </ul>
+          </article>
+
+          <article class="todo-phase" id="todo-phase-3">
+            <div class="todo-header">
+              <span class="emoji" aria-hidden="true">🔹</span>
+              <div>
+                <h3>Phase 3: War Room Map (Visualization Core)</h3>
+              </div>
+            </div>
+            <ul class="todo-list">
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Implement <code>GET /api/suppliers</code></span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/app.py</span>
+                  <span>backend/services/supplier_fetch_service.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Ensure API returns coordinates, tier, status, parent_supplier_id</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/models/supplier_model.py</span>
+                  <span>backend/services/supplier_fetch_service.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Integrate Leaflet.js map</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/map.html</span>
+                  <span>frontend/js/map.js</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Plot supplier markers based on coordinates</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/js/map.js</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Color-code markers (GREEN / RED)</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/js/map.js</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Draw trade arcs (polyline) between parent &amp; child suppliers</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/js/map.js</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Implement marker popups with supplier details</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/js/map.js</span>
+                </div>
+              </li>
+            </ul>
+          </article>
+
+          <article class="todo-phase" id="todo-phase-4">
+            <div class="todo-header">
+              <span class="emoji" aria-hidden="true">🔹</span>
+              <div>
+                <h3>Phase 4: Sentinel – Disruption Detection</h3>
+              </div>
+            </div>
+            <ul class="todo-list">
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Integrate News API (Currents / GNews)</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/services/news_monitor.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Define disruption keywords list</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/services/news_monitor.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Match city name from news articles</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/services/news_monitor.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Implement <code>POST /api/disruption/check</code></span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/app.py</span>
+                  <span>backend/services/news_monitor.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Tag all suppliers in affected city as RED</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/services/risk_tagging_service.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Store disruption event in <code>disruption_events</code> collection</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/models/disruption_model.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Add “Run Risk Scan” button</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/dashboard.html</span>
+                  <span>frontend/js/dashboard.js</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Display toast / alert with impacted supplier count</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/js/dashboard.js</span>
+                </div>
+              </li>
+            </ul>
+          </article>
+
+          <article class="todo-phase" id="todo-phase-5">
+            <div class="todo-header">
+              <span class="emoji" aria-hidden="true">🔹</span>
+              <div>
+                <h3>Phase 5: Impact Propagation (Ripple Effect)</h3>
+              </div>
+            </div>
+            <ul class="todo-list">
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Fetch all RED suppliers</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/services/impact_engine.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Calculate total delay using buffer days sum</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/services/impact_engine.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Implement <code>GET /api/impact_summary</code></span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/app.py</span>
+                  <span>backend/services/impact_engine.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Display impact KPIs (count, delay days)</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/dashboard.html</span>
+                  <span>frontend/js/dashboard.js</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Create delay visualization using Chart.js</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/js/dashboard.js</span>
+                </div>
+              </li>
+            </ul>
+          </article>
+
+          <article class="todo-phase" id="todo-phase-6">
+            <div class="todo-header">
+              <span class="emoji" aria-hidden="true">🔹</span>
+              <div>
+                <h3>Phase 6: Intelligent Plan-B (Mitigation Engine)</h3>
+              </div>
+            </div>
+            <ul class="todo-list">
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Implement <code>GET /api/alternatives/&lt;material&gt;</code></span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/services/mitigation_service.py</span>
+                  <span>backend/app.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Filter suppliers by material &amp; GREEN status</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/services/mitigation_service.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="#todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Display alternative suppliers table</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/dashboard.html</span>
+                  <span>frontend/js/dashboard.js</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Add “Switch Supplier” button</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/js/dashboard.js</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Implement mitigation simulation API</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/services/mitigation_service.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Show confirmation message after switch</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/js/dashboard.js</span>
+                </div>
+              </li>
+            </ul>
+          </article>
+
+          <article class="todo-phase" id="todo-phase-7">
+            <div class="todo-header">
+              <span class="emoji" aria-hidden="true">🔹</span>
+              <div>
+                <h3>Phase 7: Digital Compliance Vault</h3>
+              </div>
+            </div>
+            <ul class="todo-list">
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Design <code>compliance_docs</code> collection</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/models/compliance_model.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Store ISO / ESG / Safety expiry dates</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/models/compliance_model.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Implement expiry check logic (30-day threshold)</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/services/compliance_service.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Implement <code>GET /api/compliance_alerts</code></span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/app.py</span>
+                  <span>backend/services/compliance_service.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Display compliance alerts list</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/dashboard.html</span>
+                  <span>frontend/js/dashboard.js</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Apply color indicators (Yellow / Red)</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/css/style.css</span>
+                </div>
+              </li>
+            </ul>
+          </article>
+
+          <article class="todo-phase" id="todo-phase-8">
+            <div class="todo-header">
+              <span class="emoji" aria-hidden="true">🔹</span>
+              <div>
+                <h3>Phase 8: Final Integration &amp; QA</h3>
+              </div>
+            </div>
+            <ul class="todo-list">
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Validate API responses &amp; error handling</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/app.py</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Replace dummy data with live APIs</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/js/api.js</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>Both:</strong> End-to-end testing &amp; fixes</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>All relevant frontend &amp; backend files</span>
+                </div>
+              </li>
+            </ul>
+          </article>
+
+          <article class="todo-phase" id="todo-phase-9">
+            <div class="todo-header">
+              <span class="emoji" aria-hidden="true">🔹</span>
+              <div>
+                <h3>Phase 9: Deployment &amp; Submission</h3>
+              </div>
+            </div>
+            <ul class="todo-list">
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Deploy Flask backend</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>backend/app.py</span>
+                  <span>backend/requirements.txt</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Deploy frontend on GitHub Pages</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>frontend/*</span>
+                </div>
+              </li>
+            </ul>
+          </article>
+
+          <article class="todo-phase" id="todo-phase-10">
+            <div class="todo-header">
+              <span class="emoji" aria-hidden="true">🔹</span>
+              <div>
+                <h3>Phase 10: Report &amp; Viva Prep</h3>
+              </div>
+            </div>
+            <ul class="todo-list">
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>BD:</strong> Write backend logic explanation</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>docs/backend_design.md</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>FD:</strong> Write UI &amp; visualization explanation</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>docs/frontend_design.md</span>
+                </div>
+              </li>
+              <li>
+                <div class="todo-task">
+                  <span class="todo-checkbox">[ ]</span>
+                  <span><strong>Both:</strong> Architecture diagram &amp; demo script</span>
+                </div>
+                <div class="todo-files">
+                  <strong>Files</strong>
+                  <span>docs/architecture.png</span>
+                  <span>docs/viva_script.md</span>
+                </div>
+              </li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <footer>
+        <strong>LinkNode</strong> aligns execution tasks with concrete deliverables, ensuring each phase ships production-ready assets.
+      </footer>
+    </div>
+  </body>
+</html>
