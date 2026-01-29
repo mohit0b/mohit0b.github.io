@@ -177,6 +177,13 @@
         font-size: 0.82rem;
       }
 
+      .phase-goal {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
       .phase-content {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -190,6 +197,115 @@
         padding: 20px 22px;
         display: grid;
         gap: 14px;
+      }
+
+      .todo-section {
+        margin-top: clamp(52px, 6vw, 88px);
+        background: linear-gradient(135deg, rgba(12, 36, 58, 0.82), rgba(7, 20, 33, 0.94));
+        border-radius: 28px;
+        border: 1px solid rgba(72, 229, 194, 0.16);
+        box-shadow: var(--shadow);
+        padding: clamp(32px, 5vw, 52px);
+        display: grid;
+        gap: clamp(26px, 4vw, 38px);
+      }
+
+      .todo-section header {
+        display: grid;
+        gap: 12px;
+        text-align: center;
+      }
+
+      .todo-section header h2 {
+        margin: 0;
+        font-family: var(--font-heading);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+      }
+
+      .todo-section header p {
+        margin: 0 auto;
+        color: var(--muted);
+        max-width: 720px;
+        line-height: 1.6;
+      }
+
+      .todo-grid {
+        display: grid;
+        gap: clamp(22px, 3vw, 30px);
+      }
+
+      .todo-card {
+        background: rgba(8, 23, 34, 0.9);
+        border-radius: 22px;
+        border: 1px solid rgba(72, 229, 194, 0.12);
+        padding: clamp(22px, 3.6vw, 30px);
+        display: grid;
+        gap: 18px;
+      }
+
+      .todo-heading {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .todo-icon {
+        font-size: 1.8rem;
+        line-height: 1;
+      }
+
+      .todo-title h3 {
+        margin: 0;
+        font-family: var(--font-heading);
+        font-size: 1.1rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .todo-title span {
+        color: rgba(241, 245, 249, 0.62);
+        font-size: 0.88rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .todo-goal {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .todo-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 12px;
+      }
+
+      .todo-list li {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .todo-checkbox {
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        color: rgba(241, 245, 249, 0.76);
+        flex-shrink: 0;
+        min-width: 42px;
+      }
+
+      .todo-label strong {
+        color: var(--accent);
+        font-weight: 500;
       }
 
       .column h3 {
@@ -251,60 +367,44 @@
       </header>
 
       <main class="timeline">
-        <section class="phase" id="phase-0">
-          <div class="phase-header">
-            <div class="phase-tag">0</div>
-            <div class="phase-title">
-              <h2>Planning, Scope &amp; Feasibility</h2>
-              <span>Week 1</span>
-            </div>
-          </div>
-          <div class="phase-content">
-            <div class="column">
-              <h3>Core Build</h3>
-              <ul>
-                <li>Finalize problem statement and key objectives.</li>
-                <li>Define user roles: Anchor (original equipment manufacturer) and Suppliers (Tier-1 to Tier-N).</li>
-                <li>Lock initial scope around multi-tier visibility, predictive risk alerts, and plan-B sourcing.</li>
-                <li>Decide on simulated versus real data sources for onboarding.</li>
-              </ul>
-            </div>
-            <div class="column">
-              <h3>Upgrade Path</h3>
-              <ul>
-                <li>Introduce logistics partners and regulator/auditor personas.</li>
-                <li>Localize industry variants for pharma, EV, FMCG, and electronics supply chains.</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
         <section class="phase" id="phase-1">
           <div class="phase-header">
             <div class="phase-tag">1</div>
             <div class="phase-title">
-              <h2>System Architecture &amp; Tech Stack</h2>
-              <span>Week 2</span>
+              <h2>Knowledge Graph &amp; DB Architecture</h2>
+              <span>Phase 1</span>
             </div>
           </div>
+          <p class="phase-goal">Goal: Build the digital twin of the supply chain.</p>
           <div class="phase-content">
             <div class="column">
-              <h3>Core Build</h3>
+              <h3>Frontend (HTML/CSS/JS)</h3>
               <ul>
-                <li>Design a four-layer modular architecture.</li>
-                <li>Presentation: React.js dashboards.</li>
-                <li>Logic: Node.js with Express services.</li>
-                <li>Intelligence: Python risk engine.</li>
-                <li>Data: MongoDB with graph modeling.</li>
-                <li>Integrate Currents API and OpenWeatherMap.</li>
+                <li>Design the MainLayout shell with a fixed sidebar.</li>
+                <li>Create the onboarding form for Anchor registration.</li>
+                <li>Build a dynamic input field to add multiple sub-suppliers.</li>
+                <li>Style the role selector UI for Anchor versus Supplier.</li>
+                <li>Add JavaScript validation for GPS coordinate inputs.</li>
+                <li>Design a success state modal for completed registration.</li>
+                <li>Create a loading skeleton for the supplier directory.</li>
+                <li>Build a search bar to filter the supplier list by name.</li>
+                <li>Use local storage to keep the logged-in session active.</li>
+                <li>Write an Axios service for all backend communication.</li>
               </ul>
             </div>
             <div class="column">
-              <h3>Upgrade Path</h3>
+              <h3>Backend (Node.js/MongoDB)</h3>
               <ul>
-                <li>Shift to a microservices architecture.</li>
-                <li>Adopt event-driven messaging with Kafka.</li>
-                <li>Enable cloud-native scaling on Kubernetes.</li>
+                <li>Initialize the MongoDB Atlas cluster.</li>
+                <li>Design the <code>SupplierSchema</code> with <code>parent_ids[]</code>.</li>
+                <li>Implement the <code>POST /api/onboard</code> endpoint.</li>
+                <li>Create logic to generate unique company IDs.</li>
+                <li>Set up the <code>RelationshipSchema</code> to track linkages.</li>
+                <li>Build the <code>GET /api/suppliers/:id</code> recursive fetch.</li>
+                <li>Implement bcrypt for secure user password storage.</li>
+                <li>Configure Mongoose middleware to log data changes.</li>
+                <li>Create a seed script to populate Tier-3 dummy data.</li>
+                <li>Add error-handling middleware for API safety.</li>
               </ul>
             </div>
           </div>
@@ -314,25 +414,40 @@
           <div class="phase-header">
             <div class="phase-tag">2</div>
             <div class="phase-title">
-              <h2>Database &amp; Digital Twin Modeling</h2>
-              <span>Week 3</span>
+              <h2>Network Visualization (Mapbox GL JS)</h2>
+              <span>Phase 2</span>
             </div>
           </div>
+          <p class="phase-goal">Goal: Turn data into a 3D interactive globe.</p>
           <div class="phase-content">
             <div class="column">
-              <h3>Core Build</h3>
+              <h3>Frontend (HTML/CSS/JS)</h3>
               <ul>
-                <li>Establish MongoDB collections: suppliers, risk_events, inventory, documents (GridFS).</li>
-                <li>Implement parent-child relationships for network traversal.</li>
-                <li>Enable $graphLookup queries for Tier-N exploration.</li>
+                <li>Embed Mapbox GL JS into a full-screen container.</li>
+                <li>Map JSON supplier data into Mapbox markers.</li>
+                <li>Create custom HTML/CSS popups for marker clicks.</li>
+                <li>Draw SVG arcs between nodes to show trade routes.</li>
+                <li>Style node colors: Anchor (blue) and Tier-1 (white).</li>
+                <li>Add “Zoom to Region” controls for Asia and Europe.</li>
+                <li>Provide a toggle to show or hide connection lines.</li>
+                <li>Offer a satellite view versus street view switcher.</li>
+                <li>Calculate map center based on supplier density.</li>
+                <li>Add a CSS pulse animation to highlight the Anchor node.</li>
               </ul>
             </div>
             <div class="column">
-              <h3>Upgrade Path</h3>
+              <h3>Backend (Node.js/Express)</h3>
               <ul>
-                <li>Introduce time-series database for logistics telemetry.</li>
-                <li>Evaluate Neo4j for very large supply graphs.</li>
-                <li>Anchor contract hashes on blockchain for integrity.</li>
+                <li>Create the <code>GET /api/graph/geo</code> endpoint.</li>
+                <li>Convert raw database data into GeoJSON format.</li>
+                <li>Group suppliers by tier level for efficient rendering.</li>
+                <li>Add coordinate validation (latitude/longitude) in the database.</li>
+                <li>Optimize queries to return only visible nodes.</li>
+                <li>Implement a caching layer for map responses.</li>
+                <li>Add a bounding box filter to the geo endpoint.</li>
+                <li>Serve static supplier icons for map markers.</li>
+                <li>Expose an endpoint for supplier quick-info tooltips.</li>
+                <li>Log every map-fetch request for audit trails.</li>
               </ul>
             </div>
           </div>
@@ -342,26 +457,40 @@
           <div class="phase-header">
             <div class="phase-tag">3</div>
             <div class="phase-title">
-              <h2>Supplier Onboarding &amp; Network Expansion</h2>
-              <span>Week 4</span>
+              <h2>The Sentinel (Currents API Intelligence)</h2>
+              <span>Phase 3</span>
             </div>
           </div>
+          <p class="phase-goal">Goal: Connect the platform to real-world disruption signals.</p>
           <div class="phase-content">
             <div class="column">
-              <h3>Core Build</h3>
+              <h3>Frontend (HTML/CSS/JS)</h3>
               <ul>
-                <li>Launch anchor onboarding workflow.</li>
-                <li>Enable cascading invitations from Tier-1 through Tier-N.</li>
-                <li>Create open discovery pool for independent suppliers.</li>
-                <li>Persist parent-child relationships in MongoDB.</li>
+                <li>Build a live news ticker in the header.</li>
+                <li>Design a risk card component for the sidebar.</li>
+                <li>Format API timestamps into relative “X mins ago.”</li>
+                <li>Add a blinking red indicator for new alerts.</li>
+                <li>Create a news detail modal for full article reading.</li>
+                <li>Include a dismiss alert button using JS filters.</li>
+                <li>Design category icons for each risk type.</li>
+                <li>Build a filter UI to sort news by severity level.</li>
+                <li>Add a “Mark as Read” experience for notifications.</li>
+                <li>Trigger audio alerts when critical news hits.</li>
               </ul>
             </div>
             <div class="column">
-              <h3>Upgrade Path</h3>
+              <h3>Backend (Python/Node.js)</h3>
               <ul>
-                <li>AI-assisted supplier discovery recommendations.</li>
-                <li>Automated verification via government or trade APIs.</li>
-                <li>Consortium-based shared onboarding for allied firms.</li>
+                <li>Set up a Python background worker.</li>
+                <li>Integrate the Currents API using secured keys.</li>
+                <li>Create a keyword filtering array (strike, flood, etc.).</li>
+                <li>Implement NLP sentiment analysis on headlines.</li>
+                <li>Extract locations from news items for geo-tagging.</li>
+                <li>Build the <code>POST /api/risks</code> ingestion logic.</li>
+                <li>Rate-limit Currents API calls to avoid throttling.</li>
+                <li>Flag linked suppliers as affected when relevant.</li>
+                <li>Set up webhooks to notify the Node.js server.</li>
+                <li>Store a 30-day history of risk events in MongoDB.</li>
               </ul>
             </div>
           </div>
@@ -371,26 +500,40 @@
           <div class="phase-header">
             <div class="phase-tag">4</div>
             <div class="phase-title">
-              <h2>Intelligence &amp; Risk Monitoring</h2>
-              <span>Week 5</span>
+              <h2>Risk Propagation &amp; Impact Logic</h2>
+              <span>Phase 4</span>
             </div>
           </div>
+          <p class="phase-goal">Goal: Reveal how delays ripple through the network.</p>
           <div class="phase-content">
             <div class="column">
-              <h3>Core Build</h3>
+              <h3>Frontend (HTML/CSS/JS)</h3>
               <ul>
-                <li>Integrate Currents API for disruption news.</li>
-                <li>Implement keyword filtering and rule-based NLP tagging.</li>
-                <li>Score severity from 1 to 5.</li>
-                <li>Overlay weather risk for cyclones, floods, and heatwaves.</li>
+                <li>Turn Mapbox connection lines red when a child is at risk.</li>
+                <li>Build an impact path list showing the delay chain.</li>
+                <li>Design a delay counter UI (for example, “15 days delay”).</li>
+                <li>List affected products with badge styling.</li>
+                <li>Animate pulses along lines connecting at-risk nodes.</li>
+                <li>Render a risk summary bar chart using Chart.js.</li>
+                <li>Auto-zoom the map to the source risk node.</li>
+                <li>Style line weights based on trade volume.</li>
+                <li>Add hover effects to highlight specific sub-chains.</li>
+                <li>Introduce a global risk meter gauge on the dashboard.</li>
               </ul>
             </div>
             <div class="column">
-              <h3>Upgrade Path</h3>
+              <h3>Backend (Node.js/Logic)</h3>
               <ul>
-                <li>Adopt transformer-based NLP models.</li>
-                <li>Support multilingual sentiment classification.</li>
-                <li>Ingest social media signals (X, Reddit).</li>
+                <li>Implement MongoDB <code>$graphLookup</code> for recursion.</li>
+                <li>Calculate direct versus indirect risk per node.</li>
+                <li>Update the <code>impact_score</code> in the database.</li>
+                <li>Compute buffer logic (Delay - Inventory = Loss).</li>
+                <li>Identify the critical path (weakest supply link).</li>
+                <li>Trigger automated risk propagation functions.</li>
+                <li>Store historical impact records for future prediction.</li>
+                <li>Expose an endpoint for downstream victims list.</li>
+                <li>Optimize graph traversal for performance.</li>
+                <li>Dispatch email/SMS alerts via a notification service.</li>
               </ul>
             </div>
           </div>
@@ -400,25 +543,40 @@
           <div class="phase-header">
             <div class="phase-tag">5</div>
             <div class="phase-title">
-              <h2>Geospatial Matching &amp; Risk Localization</h2>
-              <span>Week 6</span>
+              <h2>Command Center &amp; Analytics Dashboard</h2>
+              <span>Phase 5</span>
             </div>
           </div>
+          <p class="phase-goal">Goal: Deliver an executive-grade visibility dashboard.</p>
           <div class="phase-content">
             <div class="column">
-              <h3>Core Build</h3>
+              <h3>Frontend (HTML/CSS/JS)</h3>
               <ul>
-                <li>Extract event coordinates from Currents API.</li>
-                <li>Match suppliers by GPS location within defined radius (e.g., 200 km).</li>
-                <li>Mark impacted suppliers and hand off to impact analysis.</li>
+                <li>Create a “Total Tiers Managed” counter widget.</li>
+                <li>Integrate a pie chart for risk distribution.</li>
+                <li>Design a regional health heatmap table.</li>
+                <li>Apply dark-mode glassmorphism styling.</li>
+                <li>Add a date range picker for historical analysis.</li>
+                <li>Build supplier cards with mini sparkline graphs.</li>
+                <li>Implement map search for specific nodes.</li>
+                <li>Design a compliance overview progress bar.</li>
+                <li>Smooth transitions between map and graph views.</li>
+                <li>Create a download PDF report button.</li>
               </ul>
             </div>
             <div class="column">
-              <h3>Upgrade Path</h3>
+              <h3>Backend (Node.js/Analytics)</h3>
               <ul>
-                <li>Dynamic risk radius based on severity and velocity.</li>
-                <li>Integrate satellite imagery feeds.</li>
-                <li>Overlay real-time traffic and port congestion data.</li>
+                <li>Aggregate supplier health from MongoDB.</li>
+                <li>Provide an endpoint for the top five riskiest suppliers.</li>
+                <li>Calculate a supply chain resiliency score (0–100).</li>
+                <li>Add pagination for large supplier datasets.</li>
+                <li>Expose summary stats for the dashboard header.</li>
+                <li>Track average response time to risks.</li>
+                <li>Schedule a daily snapshot cron job.</li>
+                <li>Group analytics by material type.</li>
+                <li>Secure analytics endpoints with admin roles.</li>
+                <li>Build data export utilities for JSON and CSV.</li>
               </ul>
             </div>
           </div>
@@ -428,25 +586,40 @@
           <div class="phase-header">
             <div class="phase-tag">6</div>
             <div class="phase-title">
-              <h2>Risk Propagation &amp; Impact Analysis</h2>
-              <span>Week 7</span>
+              <h2>Alternative Sourcing &amp; Mitigation</h2>
+              <span>Phase 6</span>
             </div>
           </div>
+          <p class="phase-goal">Goal: Present intelligent plan-B pathways.</p>
           <div class="phase-content">
             <div class="column">
-              <h3>Core Build</h3>
+              <h3>Frontend (HTML/CSS/JS)</h3>
               <ul>
-                <li>Run recursive graph traversals for dependency impact.</li>
-                <li>Calculate buffer days and project delays.</li>
-                <li>Estimate production impact by product line or plant.</li>
+                <li>Design a plan-B recommendation modal.</li>
+                <li>Add compare UI for current versus alternative suppliers.</li>
+                <li>Include a request quote button for new vendors.</li>
+                <li>Style trust score stars for supplier ratings.</li>
+                <li>Provide a switch supplier slider for anchors.</li>
+                <li>Show cost impact indicators for each switch.</li>
+                <li>Highlight the new logistics route on the map.</li>
+                <li>Add verified badges for compliant alternatives.</li>
+                <li>Show alerts when no alternatives are available.</li>
+                <li>Offer an undo switch experience within 24 hours.</li>
               </ul>
             </div>
             <div class="column">
-              <h3>Upgrade Path</h3>
+              <h3>Backend (Node.js/Search)</h3>
               <ul>
-                <li>Introduce Monte Carlo simulations for probabilistic forecasting.</li>
-                <li>Provide what-if scenario planning within the digital twin.</li>
-                <li>Develop financial loss modeling engine.</li>
+                <li>Create the discovery pool database of suppliers.</li>
+                <li>Build the material match ranking algorithm.</li>
+                <li>Implement a geographic safe-zone filter.</li>
+                <li>Rank alternatives by trust score and distance.</li>
+                <li>Execute pivot logic to update graph edges.</li>
+                <li>Add compliance checks into alternative filters.</li>
+                <li>Expose a supplier recommendation API endpoint.</li>
+                <li>Log all avoidance actions for reporting.</li>
+                <li>Allow manual sourcing entries for anchors.</li>
+                <li>Adjust inventory buffers based on new routes.</li>
               </ul>
             </div>
           </div>
@@ -456,25 +629,40 @@
           <div class="phase-header">
             <div class="phase-tag">7</div>
             <div class="phase-title">
-              <h2>Mitigation &amp; Plan-B Recommendation</h2>
-              <span>Week 8</span>
+              <h2>Digital Vault &amp; Compliance Tracking</h2>
+              <span>Phase 7</span>
             </div>
           </div>
+          <p class="phase-goal">Goal: Guarantee legal, ethical, and transparent sourcing.</p>
           <div class="phase-content">
             <div class="column">
-              <h3>Core Build</h3>
+              <h3>Frontend (HTML/CSS/JS)</h3>
               <ul>
-                <li>Generate alerts with contract context.</li>
-                <li>Filter backup suppliers by material, certification, and lead time.</li>
-                <li>Support manual approval workflow for pivots.</li>
+                <li>Design a drag-and-drop file upload zone.</li>
+                <li>Create a compliance status dashboard with color states.</li>
+                <li>Build an expiry alert countdown for certificates.</li>
+                <li>Style a document viewer modal with preview.</li>
+                <li>Filter documents by category (ISO, ESG, etc.).</li>
+                <li>Add a verified checkmark animation.</li>
+                <li>List missing documents per supplier.</li>
+                <li>Offer bulk download for audit preparation.</li>
+                <li>Rank suppliers by document completeness.</li>
+                <li>Provide a digital signature placeholder UI.</li>
               </ul>
             </div>
             <div class="column">
-              <h3>Upgrade Path</h3>
+              <h3>Backend (Node.js/Storage)</h3>
               <ul>
-                <li>AI-based ranking for suppliers.</li>
-                <li>Auto-activation of smart contracts.</li>
-                <li>Automated negotiation assistants for procurement.</li>
+                <li>Implement Multer for secure PDF handling.</li>
+                <li>Set up a documents collection in MongoDB.</li>
+                <li>Run cron jobs to detect expiring certificates.</li>
+                <li>Hash files to ensure document integrity.</li>
+                <li>Configure AWS S3 or local storage integrations.</li>
+                <li>Provide <code>GET /api/documents/:supplierId</code> access.</li>
+                <li>Trigger auto-reminder emails for lapsing documents.</li>
+                <li>Record upload timestamps and uploader identities.</li>
+                <li>Auto-disable nodes that fall out of compliance.</li>
+                <li>Enforce file size and type restrictions.</li>
               </ul>
             </div>
           </div>
@@ -484,86 +672,212 @@
           <div class="phase-header">
             <div class="phase-tag">8</div>
             <div class="phase-title">
-              <h2>Frontend Visualization &amp; UX</h2>
-              <span>Week 9</span>
+              <h2>Deployment &amp; Simulation Mode</h2>
+              <span>Phase 8</span>
             </div>
           </div>
+          <p class="phase-goal">Goal: Prepare a high-impact demonstration environment.</p>
           <div class="phase-content">
             <div class="column">
-              <h3>Core Build</h3>
+              <h3>Frontend (HTML/CSS/JS)</h3>
               <ul>
-                <li>Render supplier network graph with react-force-graph.</li>
-                <li>Display risk heatmap and action center dashboard.</li>
+                <li>Build a hidden simulation control panel.</li>
+                <li>Add buttons such as “Trigger Cyclone” or “Port Strike.”</li>
+                <li>Create a demo speed slider to fast-forward time.</li>
+                <li>Develop a tour guide overlay for exhibitions.</li>
+                <li>Design a reset system control to clear mock risks.</li>
+                <li>Badge the interface as production ready.</li>
+                <li>Include a contact developer popover.</li>
+                <li>Auto-play a scenario video during demos.</li>
+                <li>Offer a mobile preview link for reviewers.</li>
+                <li>Finalize CSS for edge-to-edge immersive layouts.</li>
               </ul>
             </div>
             <div class="column">
-              <h3>Upgrade Path</h3>
+              <h3>Backend (Node.js/DevOps)</h3>
               <ul>
-                <li>Introduce 3D digital twin visualization.</li>
-                <li>Develop mobile experience with React Native.</li>
-                <li>Enable voice-driven command interface for executives.</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section class="phase" id="phase-9">
-          <div class="phase-header">
-            <div class="phase-tag">9</div>
-            <div class="phase-title">
-              <h2>Digital Contracts &amp; Compliance</h2>
-              <span>Week 10</span>
-            </div>
-          </div>
-          <div class="phase-content">
-            <div class="column">
-              <h3>Core Build</h3>
-              <ul>
-                <li>Upload contracts (PDF) to secure vault.</li>
-                <li>Monitor expirations and send alerts.</li>
-                <li>Detect SLA breaches from logistics data.</li>
-                <li>Hash documents for integrity checks.</li>
-              </ul>
-            </div>
-            <div class="column">
-              <h3>Upgrade Path</h3>
-              <ul>
-                <li>Adopt blockchain-backed smart contracts.</li>
-                <li>Automated ESG scoring pipelines.</li>
-                <li>Dedicated regulatory audit dashboards.</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section class="phase" id="phase-10">
-          <div class="phase-header">
-            <div class="phase-tag">10</div>
-            <div class="phase-title">
-              <h2>Testing, Deployment &amp; Demo</h2>
-              <span>Week 11</span>
-            </div>
-          </div>
-          <div class="phase-content">
-            <div class="column">
-              <h3>Core Build</h3>
-              <ul>
-                <li>Create risk simulation scenarios for validation.</li>
-                <li>Execute functional and API testing.</li>
-                <li>Deploy to cloud environment and stage demo walkthrough.</li>
-              </ul>
-            </div>
-            <div class="column">
-              <h3>Upgrade Path</h3>
-              <ul>
-                <li>Perform large-scale load testing.</li>
-                <li>Introduce chaos engineering drills.</li>
-                <li>Set up enterprise-grade SLA monitoring.</li>
+                <li>Deploy the API services to Render or Railway.</li>
+                <li>Run the Python Sentinel as a managed worker.</li>
+                <li>Securely manage environment variables and keys.</li>
+                <li>Expose manual disaster override APIs.</li>
+                <li>Seed a dedicated demo database.</li>
+                <li>Configure CORS for the production frontend domain.</li>
+                <li>Enable logging and monitoring (for example, Morgan).</li>
+                <li>Optimize MongoDB indexes for final scenarios.</li>
+                <li>Provide a health check endpoint.</li>
+                <li>Complete a security audit on JWT tokens.</li>
               </ul>
             </div>
           </div>
         </section>
       </main>
+
+      <section class="todo-section" aria-labelledby="todo-title">
+        <header>
+          <h2 id="todo-title">Implementation Checklist</h2>
+          <p>
+            Track granular build tasks across the eight phases. Prefixes mark ownership:
+            <strong>FD</strong> for frontend delivery and <strong>BD</strong> for backend/data
+            engineering.
+          </p>
+        </header>
+
+        <div class="todo-grid">
+          <article class="todo-card">
+            <div class="todo-heading">
+              <span class="todo-icon" aria-hidden="true">🟢</span>
+              <div class="todo-title">
+                <h3>Phase 1: Digital Twin Foundation</h3>
+                <span>Goal: Build the structural graph of the supply chain.</span>
+              </div>
+            </div>
+            <p class="todo-goal">Goal: Build the structural graph of the supply chain.</p>
+            <ul class="todo-list">
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Initialize MongoDB Atlas and set up Node.js Environment.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Design SupplierSchema with <code>parent_ids[]</code> and RelationshipSchema.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Build the MainLayout Shell (Sidebar &amp; Viewport) with Tailwind/CSS.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Create the Onboarding Form with dynamic input fields for Tier-N suppliers.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Implement <code>POST /api/onboard</code> with unique Company ID generation.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Add JS Validation for GPS coordinates and Axios service setup.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Implement Bcrypt for passwords and Mongoose change-log middleware.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Design the Success Modal and Loading Skeletons.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Write the Recursive Fetch (<code>$graphLookup</code>) and a Tier-3 seeding script.</span></li>
+            </ul>
+          </article>
+
+          <article class="todo-card">
+            <div class="todo-heading">
+              <span class="todo-icon" aria-hidden="true">🔵</span>
+              <div class="todo-title">
+                <h3>Phase 2: Network Visualization</h3>
+                <span>Goal: Map the database onto a 3D interactive globe.</span>
+              </div>
+            </div>
+            <p class="todo-goal">Goal: Map the database onto a 3D interactive globe.</p>
+            <ul class="todo-list">
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Embed Mapbox GL JS and configure the base 3D globe.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Create <code>GET /api/graph/geo</code> to serve data as GeoJSON.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Map JSON data to markers and draw SVG trade route arcs.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Add coordinate validation and a bounding box filter to the API.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Create HTML/CSS popups and “Zoom to Region” controls.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Implement caching layer and tier-based query optimization.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Add the CSS pulse animation for the Anchor node and a Satellite/Street switcher.</span></li>
+            </ul>
+          </article>
+
+          <article class="todo-card">
+            <div class="todo-heading">
+              <span class="todo-icon" aria-hidden="true">🟠</span>
+              <div class="todo-title">
+                <h3>Phase 3: The Sentinel (Risk Intelligence)</h3>
+                <span>Goal: Connect the platform to live disruption signals.</span>
+              </div>
+            </div>
+            <p class="todo-goal">Goal: Connect the platform to live disruption signals.</p>
+            <ul class="todo-list">
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Set up the Python background worker and integrate Currents API.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Build NLP sentiment analysis and location extraction logic.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Build the live news ticker and sidebar risk cards.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Implement <code>POST /api/risks</code> and webhook triggers for Node.js.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Create relative timestamp formatting and “Critical” audio alerts.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Design category icons and news severity filters.</span></li>
+            </ul>
+          </article>
+
+          <article class="todo-card">
+            <div class="todo-heading">
+              <span class="todo-icon" aria-hidden="true">🔴</span>
+              <div class="todo-title">
+                <h3>Phase 4: Risk Propagation &amp; Impact</h3>
+                <span>Goal: Reveal how a single delay ripples upward.</span>
+              </div>
+            </div>
+            <p class="todo-goal">Goal: Reveal how a single delay ripples upward.</p>
+            <ul class="todo-list">
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Implement recursive propagation logic using <code>$graphLookup</code>.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Write JS to turn Mapbox lines red dynamically based on risk data.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Compute buffer logic (Delay - Inventory = Loss).</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Create the impact path list and animated pulses along trade lines.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Integrate Chart.js for the risk summary bar chart.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Identify the critical path and dispatch email/SMS alerts.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Implement the dashboard global risk meter.</span></li>
+            </ul>
+          </article>
+
+          <article class="todo-card">
+            <div class="todo-heading">
+              <span class="todo-icon" aria-hidden="true">🏢</span>
+              <div class="todo-title">
+                <h3>Phase 5: Command Center &amp; Analytics</h3>
+                <span>Goal: Deliver executive-grade data visualization.</span>
+              </div>
+            </div>
+            <p class="todo-goal">Goal: Deliver executive-grade data visualization.</p>
+            <ul class="todo-list">
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Create aggregation pipelines for supplier health and resiliency scores.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Build the “Total Tiers Managed” counter and risk pie chart.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Design the regional health heatmap table.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Add pagination for datasets and schedule daily snapshot cron jobs.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Build supplier cards with mini sparkline graphs.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD/BD:</strong> Create the download PDF report utility.</span></li>
+            </ul>
+          </article>
+
+          <article class="todo-card">
+            <div class="todo-heading">
+              <span class="todo-icon" aria-hidden="true">🛡️</span>
+              <div class="todo-title">
+                <h3>Phase 6: Alternative Sourcing</h3>
+                <span>Goal: Provide plan-B pathways when disruptions occur.</span>
+              </div>
+            </div>
+            <p class="todo-goal">Goal: Provide plan-B pathways when disruptions occur.</p>
+            <ul class="todo-list">
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Create the discovery pool database and material match algorithm.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Design the plan-B recommendation modal and comparison UI.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Implement pivot logic to update graph edges (switching suppliers).</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Add the verified badge and “Switch Supplier” slider.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Log all avoidance actions for reporting.</span></li>
+            </ul>
+          </article>
+
+          <article class="todo-card">
+            <div class="todo-heading">
+              <span class="todo-icon" aria-hidden="true">🔒</span>
+              <div class="todo-title">
+                <h3>Phase 7: Digital Vault &amp; Compliance</h3>
+                <span>Goal: Secure PDF handling and certificate monitoring.</span>
+              </div>
+            </div>
+            <p class="todo-goal">Goal: Secure PDF handling and certificate monitoring.</p>
+            <ul class="todo-list">
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Set up Multer and AWS S3 (or local) for PDF storage.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Design the drag-and-drop upload zone and vault UI.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Write the SHA-256 hashing logic for document integrity.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Build the expiry alert countdown and category filters.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Automate reminder emails for lapsing certificates via cron.</span></li>
+            </ul>
+          </article>
+
+          <article class="todo-card">
+            <div class="todo-heading">
+              <span class="todo-icon" aria-hidden="true">🚀</span>
+              <div class="todo-title">
+                <h3>Phase 8: Deployment &amp; Simulation</h3>
+                <span>Goal: Finalize the demo and cloud hosting.</span>
+              </div>
+            </div>
+            <p class="todo-goal">Goal: Finalize the demo and cloud hosting.</p>
+            <ul class="todo-list">
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Deploy API to Render/Railway; configure production CORS and JWT audits.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Build the hidden simulation panel to “Trigger Disasters.”</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>BD:</strong> Expose the manual disaster override API.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD:</strong> Create the exhibition tour guide overlay.</span></li>
+              <li><span class="todo-checkbox">[ ]</span><span class="todo-label"><strong>FD/BD:</strong> Deploy the final frontend and run the health check endpoints.</span></li>
+            </ul>
+          </article>
+        </div>
+      </section>
 
       <p class="footer-note">
         <strong>LinkNode</strong> evolves from foundational visibility into an adaptive, compliant, and intelligent supply
