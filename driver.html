@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard - LinkNode</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Socket.io Client -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🔗 LinkNode</h2>
+                <p>Driver Dashboard</p>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="#" class="active" data-page="shipments">📦 My Shipments</a></li>
+                <li><a href="#" data-page="tracking">📍 Live Tracking</a></li>
+                <li><a href="#" data-page="history">📜 History</a></li>
+            </ul>
+            
+            <div class="user-info">
+                <div class="name" id="userName">Driver User</div>
+                <div class="role" id="userRole">Driver</div>
+                <button class="btn btn-sm" onclick="logout()" style="margin-top: 10px; width: 100%;">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>My Assigned Shipments</h1>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <span id="connectionStatus" class="badge badge-low">● Connecting...</span>
+                    <span id="gpsStatus" class="gps-status"></span>
+                    <span id="gpsText" style="font-size: 12px; color: var(--gray);">GPS: Acquiring...</span>
+                </div>
+            </div>
+
+            <!-- GPS Info -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📡 GPS Status</h3>
+                    <button class="btn btn-primary" id="toggleGPS" onclick="toggleGPS()">Start GPS Tracking</button>
+                </div>
+                <div class="gps-info" id="gpsInfo">
+                    <p><strong>Status:</strong> <span id="gpsStatusText">Not tracking</span></p>
+                    <p><strong>Latitude:</strong> <span id="gpsLat">-</span></p>
+                    <p><strong>Longitude:</strong> <span id="gpsLng">-</span></p>
+                    <p><strong>Accuracy:</strong> <span id="gpsAccuracy">-</span> meters</p>
+                    <p><strong>Speed:</strong> <span id="gpsSpeed">-</span> km/h</p>
+                    <p><strong>Last Update:</strong> <span id="gpsLastUpdate">-</span></p>
+                </div>
+                
+                <!-- Manual Location Input for Testing -->
+                <div id="manualLocationSection" style="margin-top: 15px; padding: 10px; background: #f3f4f6; border-radius: 8px;">
+                    <p style="font-weight: 600; margin-bottom: 8px;">🎯 Manual Location (Testing)</p>
+                    <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+                        <input type="number" id="manualLat" placeholder="Latitude (e.g., 28.6139)" style="flex: 1; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
+                        <input type="number" id="manualLng" placeholder="Longitude (e.g., 77.2090)" style="flex: 1; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="setManualLocation()">Set Location</button>
+                    <button class="btn btn-success btn-sm" onclick="startSimulation()">Simulate Movement</button>
+                    <button class="btn btn-warning btn-sm" onclick="stopSimulation()">Stop</button>
+                    <button class="btn btn-secondary btn-sm" onclick="useCurrentLocation()">Use GPS</button>
+                    <p style="font-size: 12px; color: #6b7280; margin-top: 5px;">Enter Indian coordinates (e.g., Delhi: 28.6139, 77.2090)</p>
+                </div>
+            </div>
+
+            <!-- Active Shipment -->
+            <div class="card" id="activeShipmentCard" style="display: none;">
+                <div class="card-header">
+                    <h3 class="card-title">🚛 Active Shipment</h3>
+                    <span id="activeShipmentStatus" class="badge badge-in_transit">In Transit</span>
+                </div>
+                <div id="activeShipmentDetails">
+                    <!-- Dynamic content -->
+                </div>
+                <div style="margin-top: 20px; display: flex; gap: 15px;">
+                    <button class="btn btn-success" onclick="confirmDelivery()">✅ Confirm Delivery</button>
+                    <button class="btn btn-danger" onclick="reportIssue()">⚠️ Report Issue</button>
+                </div>
+            </div>
+
+            <!-- Shipments List -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📦 Assigned Shipments</h3>
+                    <button class="btn btn-primary btn-sm" onclick="refreshShipments()">🔄 Refresh</button>
+                </div>
+                <div class="table-container">
+                    <table id="shipmentsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Origin</th>
+                                <th>Destination</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="shipmentsTableBody">
+                            <!-- Dynamic content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Map -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📍 Current Location</h3>
+                </div>
+                <div class="map-container" style="height: 400px;">
+                    <div id="map"></div>
+                </div>
+            </div>
+
+            <!-- Delivery Confirmation Modal -->
+            <div id="deliveryModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Confirm Delivery</h2>
+                        <button onclick="closeDeliveryModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to confirm delivery for shipment <strong id="confirmShipmentId"></strong>?</p>
+                        
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label>Delivery Notes</label>
+                            <textarea id="deliveryNotes" rows="3" placeholder="Optional notes about the delivery..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Recipient Name</label>
+                            <input type="text" id="recipientName" placeholder="Name of person who received">
+                        </div>
+                        
+                        <div style="margin-top: 20px; display: flex; gap: 15px; justify-content: flex-end;">
+                            <button class="btn" onclick="closeDeliveryModal()">Cancel</button>
+                            <button class="btn btn-success" onclick="submitDeliveryConfirmation()">Confirm Delivery</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Issue Report Modal -->
+            <div id="issueModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Report Issue</h2>
+                        <button onclick="closeIssueModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Issue Type</label>
+                            <select id="issueType">
+                                <option value="delay">Delivery Delay</option>
+                                <option value="vehicle_breakdown">Vehicle Breakdown</option>
+                                <option value="accident">Accident</option>
+                                <option value="route_blocked">Route Blocked</option>
+                                <option value="shipment_damage">Shipment Damage</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="issueDescription" rows="4" placeholder="Describe the issue..."></textarea>
+                        </div>
+                        
+                        <div style="margin-top: 20px; display: flex; gap: 15px; justify-content: flex-end;">
+                            <button class="btn" onclick="closeIssueModal()">Cancel</button>
+                            <button class="btn btn-danger" onclick="submitIssueReport()">Submit Report</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    
+    <script src="js/api.js"></script>
+    <script src="js/socket.js"></script>
+    <script src="js/driver.js"></script>
+</body>
+</html>

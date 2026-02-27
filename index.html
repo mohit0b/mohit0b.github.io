@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkNode - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>LinkNode</h1>
+                <p>Tracking Engine</p>
+            </div>
+            
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-full">Login</button>
+            </form>
+            
+            <div id="loginError" class="error-message" style="display: none;"></div>
+            
+            <div class="demo-accounts">
+                <h4>Demo Accounts</h4>
+                <div class="demo-account">
+                    <strong>Admin:</strong> admin@linknode.com / admin123
+                </div>
+                <div class="demo-account">
+                    <strong>Driver:</strong> driver@linknode.com / driver123
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/api.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

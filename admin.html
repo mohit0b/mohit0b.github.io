@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - LinkNode</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Socket.io Client -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🔗 LinkNode</h2>
+                <p>Admin Dashboard</p>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="#" class="active" data-page="shipments">📦 Shipments</a></li>
+                <li><a href="#" data-page="tracking">📍 Live Tracking</a></li>
+                <li><a href="#" data-page="risk">⚠️ Risk Alerts</a></li>
+                <li><a href="#" data-page="recovery">🔄 Recovery</a></li>
+                <li><a href="#" data-page="users">👥 Users</a></li>
+                <li><a href="#" data-page="reports">📊 Reports</a></li>
+            </ul>
+            
+            <div class="user-info">
+                <div class="name" id="userName">Admin User</div>
+                <div class="role" id="userRole">Administrator</div>
+                <button class="btn btn-sm" onclick="logout()" style="margin-top: 10px; width: 100%;">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Shipment Management</h1>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <span id="connectionStatus" class="badge badge-low">● Connecting...</span>
+                    <button class="btn btn-primary" onclick="refreshShipments()">🔄 Refresh</button>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="label">Total Shipments</div>
+                    <div class="value" id="totalShipments">0</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="label">In Transit</div>
+                    <div class="value" id="inTransitCount">0</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="label">Delivered</div>
+                    <div class="value" id="deliveredCount">0</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="label">High Risk</div>
+                    <div class="value" id="highRiskCount">0</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Filters</h3>
+                </div>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <select id="statusFilter" onchange="filterShipments()">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="in_transit">In Transit</option>
+                        <option value="delivered">Delivered</option>
+                    </select>
+                    <select id="riskFilter" onchange="filterShipments()">
+                        <option value="">All Risk Levels</option>
+                        <option value="low">Low Risk</option>
+                        <option value="medium">Medium Risk</option>
+                        <option value="high">High Risk</option>
+                    </select>
+                    <input type="text" id="searchInput" placeholder="Search shipment ID..." onkeyup="searchShipments()">
+                </div>
+            </div>
+
+            <!-- Shipments Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">All Shipments</h3>
+                </div>
+                <div class="table-container">
+                    <table id="shipmentsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Origin</th>
+                                <th>Destination</th>
+                                <th>Status</th>
+                                <th>Driver</th>
+                                <th>Risk Level</th>
+                                <th>Last Update</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="shipmentsTableBody">
+                            <!-- Dynamic content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Map Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Live Tracking Map</h3>
+                    <select id="mapShipmentSelect" onchange="showShipmentOnMap(this.value)">
+                        <option value="">Select shipment to track</option>
+                    </select>
+                </div>
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
+            </div>
+
+            <!-- Shipment Detail Modal (Hidden by default) -->
+            <div id="shipmentModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Shipment Details</h2>
+                        <button onclick="closeModal()">&times;</button>
+                    </div>
+                    <div id="shipmentDetailContent">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    
+    <script src="js/api.js"></script>
+    <script src="js/socket.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

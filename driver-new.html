@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LinkNode Driver</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    
+    <link rel="stylesheet" href="css/driver.css">
+    
+    <!-- Socket.io Client -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="driver-app">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <h1>🚛 LinkNode</h1>
+                <span id="connectionStatus" class="status-dot offline"></span>
+            </div>
+            <button class="btn-icon" onclick="logout()">🚪</button>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Shipment Selection View -->
+            <section id="shipmentSelection" class="view active">
+                <div class="section-header">
+                    <h2>📦 Your Shipments</h2>
+                    <p>Select a shipment to start delivery</p>
+                </div>
+                
+                <div id="shipmentsList" class="shipments-list">
+                    <!-- Shipment cards will be inserted here -->
+                </div>
+                
+                <div id="noShipments" class="empty-state" style="display: none;">
+                    <div class="empty-icon">📭</div>
+                    <p>No shipments assigned</p>
+                    <button class="btn btn-primary" onclick="refreshShipments()">Refresh</button>
+                </div>
+            </section>
+
+            <!-- Active Trip View -->
+            <section id="activeTrip" class="view">
+                <!-- Trip Info Card -->
+                <div class="trip-card">
+                    <div class="trip-header">
+                        <div class="shipment-info">
+                            <span class="shipment-id" id="tripShipmentId">#--</span>
+                            <span class="status-badge" id="tripStatus">--</span>
+                        </div>
+                        <div class="tracking-indicator" id="trackingIndicator">
+                            <span class="pulse"></span>
+                            <span>Tracking Active</span>
+                        </div>
+                    </div>
+                    
+                    <div class="destination-info" id="destinationInfo">
+                        <div class="info-row">
+                            <span class="label">📍 Destination:</span>
+                            <span class="value" id="destinationAddress">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Speed & Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="currentSpeed">0</div>
+                        <div class="stat-label">Speed (km/h)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="gpsAccuracy">--</div>
+                        <div class="stat-label">GPS Accuracy (m)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="distanceCovered">0.0</div>
+                        <div class="stat-label">Distance (km)</div>
+                    </div>
+                </div>
+
+                <!-- Map Container -->
+                <div class="map-container">
+                    <div id="driverMap" class="map"></div>
+                    <div class="map-overlay" id="gpsWaiting" style="display: none;">
+                        <div class="waiting-indicator">
+                            <span class="spinner"></span>
+                            <p>Waiting for GPS signal...</p>
+                        </div>
+                    </div>
+                    <div class="map-overlay" id="offlineIndicator" style="display: none;">
+                        <div class="offline-message">
+                            <span>📡</span>
+                            <p>Offline - Updates queued</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Controls -->
+                <div class="trip-controls">
+                    <button id="endTripBtn" class="btn btn-warning btn-large" onclick="endTrip()">
+                        ⏹️ End Trip
+                    </button>
+                    <button id="confirmDeliveryBtn" class="btn btn-success btn-large" onclick="confirmDelivery()">
+                        ✅ Confirm Delivery
+                    </button>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Modal for Delivery Confirmation -->
+        <div id="deliveryModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>✅ Confirm Delivery</h3>
+                    <button class="btn-close" onclick="closeDeliveryModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to mark this shipment as delivered?</p>
+                    <div class="form-group">
+                        <label>Delivery Notes (Optional)</label>
+                        <textarea id="deliveryNotes" rows="3" placeholder="Any notes about the delivery..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeDeliveryModal()">Cancel</button>
+                    <button class="btn btn-success" onclick="submitDeliveryConfirmation()">Confirm Delivery</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div id="toastContainer" class="toast-container"></div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    
+    <!-- API Module -->
+    <script src="js/api.js"></script>
+    <script src="js/socket.js"></script>
+    <script src="js/driver-new.js"></script>
+</body>
+</html>

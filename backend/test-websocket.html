@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkNode Real-Time Tracking Test</title>
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .input-group {
+            margin: 10px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .status {
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .status.connected {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.disconnected {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+        .log-entry {
+            margin: 2px 0;
+            padding: 2px 0;
+        }
+        .log-entry.success {
+            color: #28a745;
+        }
+        .log-entry.error {
+            color: #dc3545;
+        }
+        .log-entry.info {
+            color: #17a2b8;
+        }
+        .log-entry.event {
+            color: #fd7e14;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚚 LinkNode Real-Time Tracking Test</h1>
+
+    <!-- Connection Section -->
+    <div class="section">
+        <h3>🔐 Step 1: Connect with JWT</h3>
+        <div class="input-group">
+            <label>JWT Token:</label>
+            <textarea id="tokenInput" rows="3" placeholder="Paste your JWT token here..."></textarea>
+        </div>
+        <button id="connectBtn" onclick="connect()">Connect WebSocket</button>
+        <button id="disconnectBtn" onclick="disconnect()" disabled>Disconnect</button>
+        <div id="connectionStatus" class="status disconnected">Disconnected</div>
+    </div>
+
+    <!-- Room Management Section -->
+    <div class="section">
+        <h3>📦 Step 2: Join Shipment Room</h3>
+        <div class="input-group">
+            <label>Shipment ID:</label>
+            <input type="number" id="shipmentIdInput" placeholder="Enter shipment ID (e.g., 1)">
+        </div>
+        <button id="joinBtn" onclick="joinShipment()" disabled>Join Shipment</button>
+        <button id="leaveBtn" onclick="leaveShipment()" disabled>Leave Shipment</button>
+    </div>
+
+    <!-- Test Events Section -->
+    <div class="section">
+        <h3>📡 Step 3: Watch Real-Time Events</h3>
+        <p><strong>How it works:</strong></p>
+        <ol>
+            <li>Connect with your JWT token</li>
+            <li>Join a shipment room</li>
+            <li>Driver sends GPS update via REST API</li>
+            <li>You receive real-time <code>location_update</code> event</li>
+        </ol>
+        <button onclick="clearLog()">Clear Log</button>
+        <div id="eventLog" class="log"></div>
+    </div>
+
+    <!-- Quick Test Section -->
+    <div class="section">
+        <h3>⚡ Quick REST API Test (cURL Commands)</h3>
+        <p><strong>1. Admin Login:</strong></p>
+        <code style="background:#f4f4f4; padding:10px; display:block; margin:5px 0; border-radius:4px;">
+curl -X POST http://localhost:3000/api/v1/auth/login ^<br>
+  -H "Content-Type: application/json" ^<br>
+  -d "{\"email\":\"admin@linknode.com\",\"password\":\"adminPassword\"}"
+        </code>
+        
+        <p><strong>2. Create Shipment:</strong></p>
+        <code style="background:#f4f4f4; padding:10px; display:block; margin:5px 0; border-radius:4px;">
+curl -X POST http://localhost:3000/api/v1/shipments ^<br>
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" ^<br>
+  -H "Content-Type: application/json" ^<br>
+  -d "{\"origin_address\":\"123 Delhi\",\"destination_address\":\"456 Mumbai\",\"driver_id\":2}"
+        </code>
+
+        <p><strong>3. Driver Sends GPS (Triggers Real-Time Update):</strong></p>
+        <code style="background:#f4f4f4; padding:10px; display:block; margin:5px 0; border-radius:4px;">
+curl -X POST http://localhost:3000/api/v1/tracking/update ^<br>
+  -H "Authorization: Bearer DRIVER_JWT_TOKEN" ^<br>
+  -H "Content-Type: application/json" ^<br>
+  -d "{\"shipment_id\":1,\"latitude\":28.6139,\"longitude\":77.2090}"
+        </code>
+    </div>
+
+    <script>
+        let socket;
+
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('eventLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        function updateStatus(connected) {
+            const statusEl = document.getElementById('connectionStatus');
+            const connectBtn = document.getElementById('connectBtn');
+            const disconnectBtn = document.getElementById('disconnectBtn');
+            const joinBtn = document.getElementById('joinBtn');
+
+            if (connected) {
+                statusEl.textContent = 'Connected';
+                statusEl.className = 'status connected';
+                connectBtn.disabled = true;
+                disconnectBtn.disabled = false;
+                joinBtn.disabled = false;
+            } else {
+                statusEl.textContent = 'Disconnected';
+                statusEl.className = 'status disconnected';
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+                joinBtn.disabled = true;
+                document.getElementById('leaveBtn').disabled = true;
+            }
+        }
+
+        function connect() {
+            const token = document.getElementById('tokenInput').value.trim();
+            
+            if (!token) {
+                alert('Please enter a JWT token');
+                return;
+            }
+
+            log('Connecting to WebSocket...', 'info');
+
+            socket = io('http://localhost:3000', {
+                auth: { token },
+                transports: ['websocket', 'polling']
+            });
+
+            socket.on('connect', () => {
+                log(`✅ Connected! Socket ID: ${socket.id}`, 'success');
+                updateStatus(true);
+            });
+
+            socket.on('disconnect', (reason) => {
+                log(`❌ Disconnected: ${reason}`, 'error');
+                updateStatus(false);
+            });
+
+            socket.on('connect_error', (error) => {
+                log(`❌ Connection error: ${error.message}`, 'error');
+            });
+
+            socket.on('error', (error) => {
+                log(`❌ Socket error: ${error.message || JSON.stringify(error)}`, 'error');
+            });
+
+            // Room events
+            socket.on('joined_shipment', (data) => {
+                log(`🚚 Joined shipment room: ${JSON.stringify(data)}`, 'success');
+                document.getElementById('leaveBtn').disabled = false;
+            });
+
+            socket.on('left_shipment', (data) => {
+                log(`👋 Left shipment room: ${JSON.stringify(data)}`, 'info');
+                document.getElementById('leaveBtn').disabled = true;
+            });
+
+            // Real-time tracking events
+            socket.on('location_update', (data) => {
+                log(`📍 LOCATION UPDATE: ${JSON.stringify(data, null, 2)}`, 'event');
+            });
+
+            socket.on('shipment_status_update', (data) => {
+                log(`🔄 STATUS UPDATE: ${JSON.stringify(data, null, 2)}`, 'event');
+            });
+
+            socket.on('shipment_delivered', (data) => {
+                log(`✅ DELIVERED: ${JSON.stringify(data, null, 2)}`, 'event');
+            });
+        }
+
+        function disconnect() {
+            if (socket) {
+                socket.disconnect();
+                socket = null;
+            }
+            updateStatus(false);
+        }
+
+        function joinShipment() {
+            if (!socket) {
+                alert('Please connect first');
+                return;
+            }
+
+            const shipmentId = document.getElementById('shipmentIdInput').value;
+            if (!shipmentId) {
+                alert('Please enter a shipment ID');
+                return;
+            }
+
+            log(`Joining shipment ${shipmentId}...`, 'info');
+            socket.emit('join_shipment', { shipment_id: parseInt(shipmentId) });
+        }
+
+        function leaveShipment() {
+            if (!socket) return;
+
+            const shipmentId = document.getElementById('shipmentIdInput').value;
+            if (!shipmentId) return;
+
+            log(`Leaving shipment ${shipmentId}...`, 'info');
+            socket.emit('leave_shipment', { shipment_id: parseInt(shipmentId) });
+        }
+
+        function clearLog() {
+            document.getElementById('eventLog').innerHTML = '';
+        }
+
+        // Auto-scroll log
+        setInterval(() => {
+            const logEl = document.getElementById('eventLog');
+            if (logEl.scrollHeight - logEl.scrollTop > logEl.clientHeight + 50) {
+                // User has scrolled up, don't auto-scroll
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
