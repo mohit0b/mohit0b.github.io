@@ -3,7 +3,7 @@
  * Real-time updates and live tracking
  */
 
-const SOCKET_URL = 'http://localhost:5001';
+const SOCKET_URL = 'https://your-ngrok-url-here.ngrok.io'; // Replace with your ngrok URL
 
 class SocketClient {
     constructor() {

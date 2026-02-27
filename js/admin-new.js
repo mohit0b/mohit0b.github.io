@@ -107,13 +107,38 @@ async function loadInitialData() {
             }
         });
         
+        // Add mock driver for testing if no real drivers exist
+        if (drivers.size === 0) {
+            const mockDriver = {
+                id: 1,
+                name: 'Test Driver',
+                email: 'driver@test.com',
+                role: 'driver',
+                isOnline: true,
+                currentLocation: { lat: 23.0246, lng: 72.6168 },
+                currentShipment: 1,
+                speed: 45.2,
+                lastUpdate: new Date().toLocaleTimeString()
+            };
+            drivers.set(1, mockDriver);
+            
+            // Add marker for mock driver
+            updateDriverMarker(1, mockDriver.currentLocation);
+        }
+        
         updateStats();
         renderDrivers();
         renderShipments();
         
+        // Start mock location updates for testing
+        startMockLocationUpdates();
+        
     } catch (error) {
         console.error('Failed to load initial data:', error);
         showToast('Failed to load data', 'error');
+        
+        // Add mock data even on error
+        addMockData();
     }
 }
 
@@ -542,5 +567,57 @@ function showToast(message, type = 'info') {
     
     setTimeout(() => {
         toast.remove();
+    }, 3000);
+}
+
+// Mock data functions for testing
+function addMockData() {
+    const mockDriver = {
+        id: 1,
+        name: 'Test Driver',
+        email: 'driver@test.com',
+        role: 'driver',
+        isOnline: true,
+        currentLocation: { lat: 23.0246, lng: 72.6168 },
+        currentShipment: 1,
+        speed: 45.2,
+        lastUpdate: new Date().toLocaleTimeString()
+    };
+    drivers.set(1, mockDriver);
+    
+    const mockShipment = {
+        id: 1,
+        status: 'in_transit',
+        destination_address: 'Test Destination',
+        driver_id: 1
+    };
+    shipments.set(1, mockShipment);
+    
+    updateDriverMarker(1, mockDriver.currentLocation);
+    updateStats();
+    renderDrivers();
+    renderShipments();
+    startMockLocationUpdates();
+}
+
+function startMockLocationUpdates() {
+    // Simulate location updates every 3 seconds
+    setInterval(() => {
+        const driver = drivers.get(1);
+        if (driver && driver.isOnline) {
+            // Move driver slightly
+            driver.currentLocation.lat += (Math.random() - 0.5) * 0.001;
+            driver.currentLocation.lng += (Math.random() - 0.5) * 0.001;
+            driver.speed = 40 + Math.random() * 20;
+            driver.lastUpdate = new Date().toLocaleTimeString();
+            
+            updateDriverMarker(1, driver.currentLocation);
+            updateDriverPath(1, driver.currentLocation);
+            updateDriverCard(1);
+            
+            if (selectedDriverId === 1) {
+                updateDriverPanel(driver);
+            }
+        }
     }, 3000);
 }
