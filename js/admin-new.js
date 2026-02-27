@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize
     initMap();
     initSocket();
+    socketClient.connect();
     await loadInitialData();
     
     showToast('Admin dashboard loaded. Live tracking active.', 'success');
@@ -78,9 +79,12 @@ async function loadInitialData() {
     try {
         // Load all shipments
         const shipmentsResponse = await getShipments();
-        const shipmentsData = shipmentsResponse.data || [];
+        const shipmentsData = shipmentsResponse.data || shipmentsResponse || [];
         
-        shipmentsData.forEach(shipment => {
+        // Ensure shipmentsData is an array
+        const shipmentsArray = Array.isArray(shipmentsData) ? shipmentsData : [];
+        
+        shipmentsArray.forEach(shipment => {
             shipments.set(shipment.id, shipment);
         });
         
@@ -115,30 +119,35 @@ async function loadInitialData() {
 
 // Initialize Socket.io for real-time updates
 function initSocket() {
-    socket.on('connect', () => {
-        console.log('Admin socket connected');
-        showToast('Connected to live tracking', 'success');
-    });
-    
-    // Listen for driver location updates
-    socket.on('location_update', (data) => {
-        handleLocationUpdate(data);
-    });
-    
-    // Listen for driver status changes
-    socket.on('driver_status', (data) => {
-        handleDriverStatusUpdate(data);
-    });
-    
-    // Listen for shipment status updates
-    socket.on('shipment_status', (data) => {
-        handleShipmentStatusUpdate(data);
-    });
-    
-    socket.on('disconnect', () => {
-        console.log('Socket disconnected');
-        showToast('Disconnected from live tracking', 'warning');
-    });
+    // Use socketClient from socket.js module
+    if (typeof socketClient !== 'undefined') {
+        socketClient.on('connect', () => {
+            console.log('Admin socket connected');
+            showToast('Connected to live tracking', 'success');
+        });
+        
+        // Listen for driver location updates
+        socketClient.on('location_update', (data) => {
+            handleLocationUpdate(data);
+        });
+        
+        // Listen for driver status changes
+        socketClient.on('driver_status', (data) => {
+            handleDriverStatusUpdate(data);
+        });
+        
+        // Listen for shipment status updates
+        socketClient.on('shipment_status', (data) => {
+            handleShipmentStatusUpdate(data);
+        });
+        
+        socketClient.on('disconnect', () => {
+            console.log('Socket disconnected');
+            showToast('Disconnected from live tracking', 'warning');
+        });
+    } else {
+        console.error('Socket client not loaded');
+    }
 }
 
 // Handle live location update
