@@ -234,6 +234,18 @@ function onRecoveryTriggered(callback) {
     socketClient.on('recovery_triggered', callback);
 }
 
+function onRecommendationAlert(callback) {
+    socketClient.on('recommendation_alert', callback);
+}
+
+function emitRecommendationAcknowledgment(shipmentId, recommendationType) {
+    socketClient.socket.emit('recommendation_acknowledged', {
+        shipment_id: shipmentId,
+        recommendation_type: recommendationType,
+        timestamp: new Date().toISOString()
+    });
+}
+
 function disconnectSocket() {
     socketClient.disconnect();
 }

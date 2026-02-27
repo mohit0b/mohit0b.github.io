@@ -107,38 +107,13 @@ async function loadInitialData() {
             }
         });
         
-        // Add mock driver for testing if no real drivers exist
-        if (drivers.size === 0) {
-            const mockDriver = {
-                id: 1,
-                name: 'Test Driver',
-                email: 'driver@test.com',
-                role: 'driver',
-                isOnline: true,
-                currentLocation: { lat: 23.0246, lng: 72.6168 },
-                currentShipment: 1,
-                speed: 45.2,
-                lastUpdate: new Date().toLocaleTimeString()
-            };
-            drivers.set(1, mockDriver);
-            
-            // Add marker for mock driver
-            updateDriverMarker(1, mockDriver.currentLocation);
-        }
-        
         updateStats();
         renderDrivers();
         renderShipments();
         
-        // Start mock location updates for testing
-        startMockLocationUpdates();
-        
     } catch (error) {
         console.error('Failed to load initial data:', error);
         showToast('Failed to load data', 'error');
-        
-        // Add mock data even on error
-        addMockData();
     }
 }
 
@@ -164,6 +139,11 @@ function initSocket() {
         // Listen for shipment status updates
         socketClient.on('shipment_status', (data) => {
             handleShipmentStatusUpdate(data);
+        });
+        
+        // Handle smart recommendation alerts
+        socketClient.on('recommendation_alert', (data) => {
+            handleRecommendationAlert(data);
         });
         
         socketClient.on('disconnect', () => {
@@ -570,54 +550,113 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
-// Mock data functions for testing
-function addMockData() {
-    const mockDriver = {
-        id: 1,
-        name: 'Test Driver',
-        email: 'driver@test.com',
-        role: 'driver',
-        isOnline: true,
-        currentLocation: { lat: 23.0246, lng: 72.6168 },
-        currentShipment: 1,
-        speed: 45.2,
-        lastUpdate: new Date().toLocaleTimeString()
-    };
-    drivers.set(1, mockDriver);
+// Handle smart recommendation alerts
+function handleRecommendationAlert(data) {
+    const { shipment_id, driver_id, recommendations, timestamp } = data;
     
-    const mockShipment = {
-        id: 1,
-        status: 'in_transit',
-        destination_address: 'Test Destination',
-        driver_id: 1
-    };
-    shipments.set(1, mockShipment);
-    
-    updateDriverMarker(1, mockDriver.currentLocation);
-    updateStats();
-    renderDrivers();
-    renderShipments();
-    startMockLocationUpdates();
+    recommendations.forEach(rec => {
+        // Show recommendation popup
+        showRecommendationPopup(rec, shipment_id, driver_id);
+        
+        // Update recommendation counter
+        updateRecommendationCounter();
+        
+        // Log for analytics
+        console.log('Recommendation received:', rec);
+    });
 }
 
-function startMockLocationUpdates() {
-    // Simulate location updates every 3 seconds
-    setInterval(() => {
-        const driver = drivers.get(1);
-        if (driver && driver.isOnline) {
-            // Move driver slightly
-            driver.currentLocation.lat += (Math.random() - 0.5) * 0.001;
-            driver.currentLocation.lng += (Math.random() - 0.5) * 0.001;
-            driver.speed = 40 + Math.random() * 20;
-            driver.lastUpdate = new Date().toLocaleTimeString();
-            
-            updateDriverMarker(1, driver.currentLocation);
-            updateDriverPath(1, driver.currentLocation);
-            updateDriverCard(1);
-            
-            if (selectedDriverId === 1) {
-                updateDriverPanel(driver);
-            }
+// Show recommendation popup with severity colors
+function showRecommendationPopup(recommendation, shipmentId, driverId) {
+    const popup = document.createElement('div');
+    popup.className = `recommendation-popup recommendation-${recommendation.severity}`;
+    
+    const severityColors = {
+        low: '#10b981',    // green
+        medium: '#f59e0b',  // yellow  
+        high: '#ef4444'     // red
+    };
+    
+    popup.innerHTML = `
+        <div class="recommendation-header" style="background: ${severityColors[recommendation.severity]}">
+            <span class="recommendation-type">${recommendation.type.replace('_', ' ').toUpperCase()}</span>
+            <span class="recommendation-severity">${recommendation.severity.toUpperCase()}</span>
+            <button class="close-btn" onclick="this.parentElement.parentElement.remove()">×</button>
+        </div>
+        <div class="recommendation-content">
+            <p><strong>Shipment #${shipmentId}</strong></p>
+            <p>${recommendation.message}</p>
+            <div class="recommendation-actions">
+                <button class="btn btn-sm btn-primary" onclick="acknowledgeRecommendation(${shipmentId}, '${recommendation.type}')">
+                    Acknowledge
+                </button>
+                <button class="btn btn-sm btn-secondary" onclick="dismissRecommendation(this)">
+                    Dismiss
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // Position popup at top-right of screen
+    popup.style.position = 'fixed';
+    popup.style.top = '20px';
+    popup.style.right = '20px';
+    popup.style.zIndex = '9999';
+    popup.style.maxWidth = '400px';
+    popup.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+    
+    document.body.appendChild(popup);
+    
+    // Auto-remove after 10 seconds
+    setTimeout(() => {
+        if (popup.parentElement) {
+            popup.remove();
         }
-    }, 3000);
+    }, 10000);
 }
+
+// Update recommendation counter in UI
+function updateRecommendationCounter() {
+    const counter = document.getElementById('recommendationCounter');
+    if (counter) {
+        const currentCount = parseInt(counter.textContent) || 0;
+        counter.textContent = currentCount + 1;
+        counter.style.display = currentCount + 1 > 0 ? 'block' : 'none';
+    }
+}
+
+// Acknowledge recommendation via API
+async function acknowledgeRecommendation(shipmentId, recommendationType) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/smart/recommendations/acknowledge`, {
+            method: 'PUT',
+            headers: getHeaders(),
+            body: JSON.stringify({
+                shipment_id: shipmentId,
+                recommendation_type: recommendationType
+            })
+        });
+        
+        if (response.ok) {
+            showToast('Recommendation acknowledged', 'success');
+            // Remove popup
+            const popup = document.querySelector('.recommendation-popup');
+            if (popup) popup.remove();
+        } else {
+            showToast('Failed to acknowledge recommendation', 'error');
+        }
+    } catch (error) {
+        console.error('Error acknowledging recommendation:', error);
+        showToast('Error acknowledging recommendation', 'error');
+    }
+}
+
+// Dismiss recommendation popup
+function dismissRecommendation(button) {
+    const popup = button.closest('.recommendation-popup');
+    if (popup) {
+        popup.remove();
+        showToast('Recommendation dismissed', 'info');
+    }
+}
+

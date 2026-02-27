@@ -302,6 +302,9 @@ async function handlePositionUpdate(position) {
     elements.gpsAccuracy.textContent = accuracy ? Math.round(accuracy) : '--';
     elements.distanceCovered.textContent = (totalDistance / 1000).toFixed(1);
     
+    // Update ETA display
+    updateETADisplay();
+    
     // Update map
     updateMap(newPosition);
     
@@ -576,6 +579,120 @@ function showToast(message, type = 'info') {
     setTimeout(() => {
         toast.remove();
     }, 3000);
+}
+
+// Update ETA display based on current conditions
+async function updateETADisplay() {
+    if (!currentShipment) return;
+    
+    try {
+        // Get current tracking data for ETA calculation
+        const response = await fetch(`${API_BASE_URL}/smart/tracking/${currentShipment.id}`, {
+            headers: getHeaders()
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            const etaPrediction = data.data?.eta_prediction;
+            
+            if (etaPrediction) {
+                // Update ETA display
+                const etaElement = document.getElementById('etaDisplay');
+                if (etaElement) {
+                    const etaTime = new Date(etaPrediction.eta);
+                    const now = new Date();
+                    const timeDiff = etaTime - now;
+                    const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                    
+                    etaElement.innerHTML = `
+                        <div class="eta-value">${hours}h ${minutes}m</div>
+                        <div class="eta-confidence confidence-${etaPrediction.confidence}">
+                            Confidence: ${etaPrediction.confidence.toUpperCase()}
+                        </div>
+                    `;
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error updating ETA:', error);
+    }
+}
+
+// Handle recommendation alerts from server
+function handleDriverRecommendation(data) {
+    if (data.shipment_id !== currentShipment?.id) return;
+    
+    const recommendations = data.recommendations || [];
+    recommendations.forEach(rec => {
+        showDriverRecommendation(rec);
+    });
+}
+
+// Show recommendation to driver
+function showDriverRecommendation(recommendation) {
+    const popup = document.createElement('div');
+    popup.className = `driver-recommendation recommendation-${recommendation.severity}`;
+    
+    const severityColors = {
+        low: '#10b981',    // green
+        medium: '#f59e0b',  // yellow  
+        high: '#ef4444'     // red
+    };
+    
+    popup.innerHTML = `
+        <div class="driver-rec-header" style="background: ${severityColors[recommendation.severity]}">
+            <span class="driver-rec-type">${recommendation.type.replace('_', ' ').toUpperCase()}</span>
+            <button class="driver-rec-close" onclick="this.parentElement.parentElement.remove()">×</button>
+        </div>
+        <div class="driver-rec-content">
+            <p>${recommendation.message}</p>
+            <button class="btn btn-sm btn-primary" onclick="acknowledgeDriverRecommendation('${recommendation.type}')">
+                I Understand
+            </button>
+        </div>
+    `;
+    
+    // Position at bottom of driver view
+    popup.style.position = 'fixed';
+    popup.style.bottom = '20px';
+    popup.style.left = '50%';
+    popup.style.transform = 'translateX(-50%)';
+    popup.style.zIndex = '9999';
+    popup.style.maxWidth = '350px';
+    
+    document.body.appendChild(popup);
+    
+    // Auto-remove after 8 seconds
+    setTimeout(() => {
+        if (popup.parentElement) {
+            popup.remove();
+        }
+    }, 8000);
+}
+
+// Acknowledge driver recommendation
+async function acknowledgeDriverRecommendation(recommendationType) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/smart/recommendations/acknowledge`, {
+            method: 'PUT',
+            headers: getHeaders(),
+            body: JSON.stringify({
+                shipment_id: currentShipment.id,
+                recommendation_type: recommendationType
+            })
+        });
+        
+        if (response.ok) {
+            showToast('Recommendation acknowledged', 'success');
+            // Remove popup
+            const popup = document.querySelector('.driver-recommendation');
+            if (popup) popup.remove();
+        }
+    } catch (error) {
+        console.error('Error acknowledging recommendation:', error);
+        showToast('Error acknowledging recommendation', 'error');
+    }
 }
 
 // Refresh shipments
